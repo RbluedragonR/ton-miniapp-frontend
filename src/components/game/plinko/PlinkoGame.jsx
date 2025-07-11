@@ -215,7 +215,7 @@ const PlinkoGame = ({ user, setUser, loadingUser }) => {
         <div className="plinko-galaxy-container">
             <div className="plinko-header">
                 <span className="balance-display">
-                    {loadingUser ? <Spin size="small" /> : `${parseFloat(user?.balance || 0).toFixed(2)} ARIX`}
+                    {loadingUser ? <Spin size="small" /> : `${parseFloat(user?.balance || 0).toFixed(2)} OXYBLE`}
                 </span>
             </div>
             

@@ -9,7 +9,7 @@
 
 /* Header section for balance, topup/cashout, banner - common styles */
 .page-header-section {
-    background-color: var(--app-bg-dark-section, #111215);
+    background-color: inherit;
     border-radius: 0 0 12px 12px;
     padding: 16px;
     display: flex;
@@ -23,6 +23,7 @@
     padding-left: 16px; /* Restore padding */
     padding-right: 16px; /* Restore padding */
     padding-top: 20px; /* Restore padding */
+    margin: 0 auto; /* Center the header */
 }
 @media (min-width: 768px) { /* md breakpoint, adjust if needed based on App.jsx Grid.useBreakpoint() */
     .page-header-section {

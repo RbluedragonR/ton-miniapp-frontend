@@ -330,12 +330,12 @@
     margin-top: 12px !important;
 }
 
-.dashboard-button.withdraw-arix-button { /* Specific override for ARIX yellow */
+.dashboard-button.withdraw-OXYBLE-button { /* Specific override for OXYBLE yellow */
     background-color: #FFC107 !important;
     border-color: #FFC107 !important;
     color: var(--app-bg-dark-element, #08090A) !important;
 }
-.dashboard-button.withdraw-arix-button:hover {
+.dashboard-button.withdraw-OXYBLE-button:hover {
     background-color: #ffca2c !important;
     border-color: #ffca2c !important;
 }

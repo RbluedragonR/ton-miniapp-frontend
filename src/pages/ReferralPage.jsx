@@ -96,8 +96,8 @@ const ReferralPage = () => {
 
         if (navigator.share) {
             navigator.share({
-                title: 'Join ARIX Terminal!',
-                text: `Join me on ARIX Terminal to stake ARIX, earn USDT rewards, and play games! Use my referral link: ${linkToShare}`,
+                title: 'Join OXYBLE Terminal!',
+                text: `Join me on OXYBLE Terminal to stake OXYBLE, earn USDT rewards, and play games! Use my referral link: ${linkToShare}`,
                 url: linkToShare,
             })
                 .then(() => console.log('Referral link shared successfully.'))
@@ -201,7 +201,7 @@ const ReferralPage = () => {
                     Referral Reward Structure
                 </Title>
                 <Paragraph style={{color: '#A0A0A5', textAlign: 'center', marginBottom: 20}}>
-                    {programDetails.message || 'Earn rewards by inviting new users who stake ARIX. Rewards are based on their chosen plan.'}
+                    {programDetails.message || 'Earn rewards by inviting new users who stake OXYBLE. Rewards are based on their chosen plan.'}
                 </Paragraph>
                 <Spin spinning={loadingDetails} tip="Loading program details..." size="large">
                     {programDetails.plans && programDetails.plans.length > 0 ? (

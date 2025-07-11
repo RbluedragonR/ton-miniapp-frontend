@@ -190,7 +190,7 @@ const CurrentBetsList = ({ players, myWalletAddress }) => {
             {players.map(player => (
                 <div key={player.user_wallet_address} className={`bet-row ${player.user_wallet_address === myWalletAddress ? 'my-bet-row' : ''}`}>
                     <span className="player-address">{player.user_wallet_address.slice(0, 4)}...{player.user_wallet_address.slice(-4)}</span>
-                    <span className="bet-amount">{parseFloat(player.bet_amount_arix).toFixed(2)} ARIX</span>
+                    <span className="bet-amount">{parseFloat(player.bet_amount_OXYBLE).toFixed(2)} OXYBLE</span>
                     {player.status === 'cashed_out'
                         ? <Tag color="green">@{parseFloat(player.cash_out_multiplier).toFixed(2)}x</Tag>
                         : <Tag color="blue">Playing</Tag>
@@ -214,7 +214,7 @@ const MyBetsHistory = ({ walletAddress }) => {
             .finally(() => setLoading(false));
     }, [walletAddress]);
     useEffect(() => { fetchHistory() }, [fetchHistory]);
-    const columns = [{ title: 'ID', dataIndex: 'game_id', align: 'center'}, { title: 'Bet', dataIndex: 'bet_amount_arix', render: val => parseFloat(val).toFixed(2) }, { title: 'Crashed At', dataIndex: 'crash_multiplier', render: val => `${parseFloat(val).toFixed(2)}x` }, { title: 'Outcome', render: (_, rec) => (rec.status === 'cashed_out' ? <Tag color="green">Won (+{(rec.payout_arix - rec.bet_amount_arix).toFixed(2)})</Tag> : <Tag color="red">Lost</Tag>) }, ];
+    const columns = [{ title: 'ID', dataIndex: 'game_id', align: 'center'}, { title: 'Bet', dataIndex: 'bet_amount_OXYBLE', render: val => parseFloat(val).toFixed(2) }, { title: 'Crashed At', dataIndex: 'crash_multiplier', render: val => `${parseFloat(val).toFixed(2)}x` }, { title: 'Outcome', render: (_, rec) => (rec.status === 'cashed_out' ? <Tag color="green">Won (+{(rec.payout_OXYBLE - rec.bet_amount_OXYBLE).toFixed(2)})</Tag> : <Tag color="red">Lost</Tag>) }, ];
     if (loading) return <div style={{textAlign: 'center', padding: '20px'}}><Spin /></div>;
     return <Table columns={columns} dataSource={history} pagination={{ pageSize: 5 }} size="small" rowKey="id" />
 };
@@ -248,7 +248,7 @@ const CrashGame = () => {
     const handlePlaceBet = useCallback(() => {
         if (!userWalletAddress) { tonConnectUI.openModal(); return; }
         setPlacingBet(true);
-        sendMessage('PLACE_BET', { userWalletAddress, betAmountArix: parseFloat(betAmount) });
+        sendMessage('PLACE_BET', { userWalletAddress, betAmountOXYBLE: parseFloat(betAmount) });
     }, [userWalletAddress, betAmount, tonConnectUI]);
     const handleCashOut = useCallback(() => sendMessage('CASH_OUT', { userWalletAddress }), [userWalletAddress]);
     
@@ -282,7 +282,7 @@ const CrashGame = () => {
                     } else if (type === 'bet_error' && payload.userWalletAddress === userWalletAddress) {
                          message.error(payload.message, 3); setPlacingBet(false); 
                     } else if (type === 'cashout_success' && payload.userWalletAddress === userWalletAddress) {
-                         message.success(`Cashed out for ${payload.payoutArix.toFixed(2)} ARIX!`);
+                         message.success(`Cashed out for ${payload.payoutOXYBLE.toFixed(2)} OXYBLE!`);
                     }
                 } catch(e) { console.error("Error processing message:", e) }
             };

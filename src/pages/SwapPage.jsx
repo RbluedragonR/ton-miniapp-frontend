@@ -6,7 +6,7 @@ import TransactionList from '../components/user/TransactionList';
 import './SwapPage.css';
 
 const SwapPage = ({ user, setUser }) => {
-    const [fromCurrency, setFromCurrency] = useState('ARIX');
+    const [fromCurrency, setFromCurrency] = useState('OXYBLE');
     const [toCurrency, setToCurrency] = useState('USDT');
     const [fromAmount, setFromAmount] = useState('');
     const [toAmount, setToAmount] = useState('');
@@ -15,7 +15,7 @@ const SwapPage = ({ user, setUser }) => {
     const [message, setMessage] = useState({ text: '', type: '' });
     const [transactions, setTransactions] = useState([]);
 
-    const availableCurrencies = ['ARIX', 'USDT', 'TON'];
+    const availableCurrencies = ['OXYBLE', 'USDT', 'TON'];
 
     const fetchTransactions = useCallback(async () => {
         if (user?.wallet_address) {
@@ -98,7 +98,7 @@ const SwapPage = ({ user, setUser }) => {
 
     const getBalance = (currency) => {
         switch(currency) {
-            case 'ARIX': return parseFloat(user.balance || 0).toFixed(4);
+            case 'OXYBLE': return parseFloat(user.balance || 0).toFixed(4);
             case 'USDT': return parseFloat(user.usdt_balance || 0).toFixed(4);
             case 'TON': return parseFloat(user.ton_balance || 0).toFixed(8);
             default: return '0.00';
@@ -107,7 +107,7 @@ const SwapPage = ({ user, setUser }) => {
 
     const getCurrencyIcon = (currency) => {
         switch(currency) {
-            case 'ARIX': return '💎';
+            case 'OXYBLE': return '💎';
             case 'USDT': return '💵';
             case 'TON': return '🔵';
             default: return '❔';
@@ -120,7 +120,7 @@ const SwapPage = ({ user, setUser }) => {
             <div className="swap-header">
                 <div className="token-balance-item">
                     <span className="icon">💎</span>
-                    <span>{getBalance('ARIX')}</span>
+                    <span>{getBalance('OXYBLE')}</span>
                 </div>
                  <div className="token-balance-item">
                     <span className="icon">💵</span>

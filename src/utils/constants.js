@@ -34,7 +34,7 @@ export const PLINKO_MULTIPLIERS = {
 
 
 
-export const ARIX_DECIMALS = 9;
+export const OXYBLE_DECIMALS = 9;
 export const USDT_DECIMALS = 6; 
 export const USD_DECIMALS = 2;  
 
@@ -52,7 +52,7 @@ export const TON_NETWORK = import.meta.env.VITE_TON_NETWORK || 'mainnet';
 export const TON_EXPLORER_URL = TON_NETWORK === 'testnet' ? 'https://testnet.tonscan.org' : 'https://tonscan.org';
 
 
-export const TELEGRAM_BOT_USERNAME = import.meta.env.VITE_TELEGRAM_BOT_USERNAME || 'arix_terminal_tma_bot'; 
+export const TELEGRAM_BOT_USERNAME = import.meta.env.VITE_TELEGRAM_BOT_USERNAME || 'OXYBLE_terminal_tma_bot'; 
 
 
 export const REFERRAL_LINK_BASE = import.meta.env.VITE_TMA_URL || window.location.origin;

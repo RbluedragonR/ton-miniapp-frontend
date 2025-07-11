@@ -7,15 +7,15 @@ import {
 import { useTonAddress, useTonConnectUI } from '@tonconnect/ui-react';
 import { useNavigate } from 'react-router-dom';
 import {
-  getJettonWalletAddress, getJettonBalance, fromArixSmallestUnits,
-  ARIX_DECIMALS, USDT_DECIMALS, MIN_USDT_WITHDRAWAL_USD_VALUE, TON_EXPLORER_URL
+  getJettonWalletAddress, getJettonBalance, fromOXYBLESmallestUnits,
+  OXYBLE_DECIMALS, USDT_DECIMALS, MIN_USDT_WITHDRAWAL_USD_VALUE, TON_EXPLORER_URL
 } from '../../utils/tonUtils';
-import { requestUsdtWithdrawal, requestArixRewardWithdrawal, getUserProfile } from '../../services/api';
+import { requestUsdtWithdrawal, requestOXYBLERewardWithdrawal, getUserProfile } from '../../services/api';
 
 const { Text, Paragraph, Title } = Typography;
 const { useBreakpoint } = Grid;
 
-const ARIX_JETTON_MASTER_ADDRESS = import.meta.env.VITE_ARIX_TOKEN_MASTER_ADDRESS;
+const OXYBLE_JETTON_MASTER_ADDRESS = import.meta.env.VITE_OXYBLE_TOKEN_MASTER_ADDRESS;
 
 const UserProfileCard = ({
                            userProfileData,
@@ -30,13 +30,13 @@ const UserProfileCard = ({
   const [tonConnectUI] = useTonConnectUI();
   const navigate = useNavigate();
 
-  const [arixWalletBalance, setArixWalletBalance] = useState(0);
-  const [loadingArixWalletBalance, setLoadingArixWalletBalance] = useState(false);
+  const [OXYBLEWalletBalance, setOXYBLEWalletBalance] = useState(0);
+  const [loadingOXYBLEWalletBalance, setLoadingOXYBLEWalletBalance] = useState(false);
   const [isWithdrawUsdtLoading, setIsWithdrawUsdtLoading] = useState(false);
-  const [isWithdrawArixLoading, setIsWithdrawArixLoading] = useState(false);
+  const [isWithdrawOXYBLELoading, setIsWithdrawOXYBLELoading] = useState(false);
   
-  const [localClaimableArix, setLocalClaimableArix] = useState('0');
-  const [loadingLocalClaimableArix, setLoadingLocalClaimableArix] = useState(false);
+  const [localClaimableOXYBLE, setLocalClaimableOXYBLE] = useState('0');
+  const [loadingLocalClaimableOXYBLE, setLoadingLocalClaimableOXYBLE] = useState(false);
 
   const screens = useBreakpoint();
   const isMobile = !screens.md;
@@ -46,83 +46,83 @@ const UserProfileCard = ({
     return isNaN(number) ? '0.00' : number.toFixed(precision);
   };
 
-  const fetchArixWalletBalance = useCallback(async (showMsg = false) => {
-    console.log("[UserProfileCard] 1. Starting fetchArixWalletBalance. rawAddress:", rawAddress);
+  const fetchOXYBLEWalletBalance = useCallback(async (showMsg = false) => {
+    console.log("[UserProfileCard] 1. Starting fetchOXYBLEWalletBalance. rawAddress:", rawAddress);
 
-    if (!rawAddress || !ARIX_JETTON_MASTER_ADDRESS) {
-      console.log("[UserProfileCard] 2. Aborting: Missing rawAddress or ARIX_JETTON_MASTER_ADDRESS.");
+    if (!rawAddress || !OXYBLE_JETTON_MASTER_ADDRESS) {
+      console.log("[UserProfileCard] 2. Aborting: Missing rawAddress or OXYBLE_JETTON_MASTER_ADDRESS.");
       console.log(`   - rawAddress found: ${!!rawAddress}`);
-      console.log(`   - ARIX_JETTON_MASTER_ADDRESS found: ${!!ARIX_JETTON_MASTER_ADDRESS} (Value: ${ARIX_JETTON_MASTER_ADDRESS})`);
-      setArixWalletBalance(0);
+      console.log(`   - OXYBLE_JETTON_MASTER_ADDRESS found: ${!!OXYBLE_JETTON_MASTER_ADDRESS} (Value: ${OXYBLE_JETTON_MASTER_ADDRESS})`);
+      setOXYBLEWalletBalance(0);
       return;
     }
 
-    setLoadingArixWalletBalance(true);
+    setLoadingOXYBLEWalletBalance(true);
     console.log("[UserProfileCard] 3. Calling getJettonWalletAddress...");
     try {
-      const userArixJettonWallet = await getJettonWalletAddress(rawAddress, ARIX_JETTON_MASTER_ADDRESS);
+      const userOXYBLEJettonWallet = await getJettonWalletAddress(rawAddress, OXYBLE_JETTON_MASTER_ADDRESS);
       
-      console.log("[UserProfileCard] 4. Received jetton wallet address:", userArixJettonWallet);
+      console.log("[UserProfileCard] 4. Received jetton wallet address:", userOXYBLEJettonWallet);
 
-      if (userArixJettonWallet) {
-        console.log("[UserProfileCard] 5. Calling getJettonBalance for address:", userArixJettonWallet);
-        const balanceSmallestUnits = await getJettonBalance(userArixJettonWallet);
+      if (userOXYBLEJettonWallet) {
+        console.log("[UserProfileCard] 5. Calling getJettonBalance for address:", userOXYBLEJettonWallet);
+        const balanceSmallestUnits = await getJettonBalance(userOXYBLEJettonWallet);
         console.log("[UserProfileCard] 6. Received balance (smallest units):", balanceSmallestUnits.toString());
         
-        const finalBalance = fromArixSmallestUnits(balanceSmallestUnits);
+        const finalBalance = fromOXYBLESmallestUnits(balanceSmallestUnits);
         console.log("[UserProfileCard] 7. Final formatted balance:", finalBalance);
-        setArixWalletBalance(finalBalance);
+        setOXYBLEWalletBalance(finalBalance);
 
-        if (showMsg) message.success("ARIX wallet balance refreshed!");
+        if (showMsg) message.success("OXYBLE wallet balance refreshed!");
       } else {
         console.log("[UserProfileCard] 5b. Jetton wallet address was null or empty. Setting balance to 0.");
-        setArixWalletBalance(0);
+        setOXYBLEWalletBalance(0);
       }
     } catch (err) {
-      console.error("[UserProfileCard] 8. CRITICAL ERROR in fetchArixWalletBalance:", err);
-      setArixWalletBalance(0);
-      if (showMsg) message.error("Could not refresh ARIX wallet balance.");
+      console.error("[UserProfileCard] 8. CRITICAL ERROR in fetchOXYBLEWalletBalance:", err);
+      setOXYBLEWalletBalance(0);
+      if (showMsg) message.error("Could not refresh OXYBLE wallet balance.");
     } finally {
-      setLoadingArixWalletBalance(false);
+      setLoadingOXYBLEWalletBalance(false);
     }
   }, [rawAddress]);
 
-  const fetchLocalClaimableArixBalance = useCallback(async () => {
+  const fetchLocalClaimableOXYBLEBalance = useCallback(async () => {
         if (rawAddress) {
-            setLoadingLocalClaimableArix(true);
+            setLoadingLocalClaimableOXYBLE(true);
             try {
                 const profileRes = await getUserProfile(rawAddress);
-                setLocalClaimableArix(Math.floor(parseFloat(profileRes.data?.claimableArixRewards || 0)).toString());
+                setLocalClaimableOXYBLE(Math.floor(parseFloat(profileRes.data?.claimableOXYBLERewards || 0)).toString());
             } catch (error) {
-                // console.error("Error fetching local claimable ARIX:", error);
+                // console.error("Error fetching local claimable OXYBLE:", error);
             } finally {
-                setLoadingLocalClaimableArix(false);
+                setLoadingLocalClaimableOXYBLE(false);
             }
         } else {
-            setLocalClaimableArix('0');
+            setLocalClaimableOXYBLE('0');
         }
     }, [rawAddress]);
 
   useEffect(() => {
     if (rawAddress) {
-      fetchArixWalletBalance();
-      fetchLocalClaimableArixBalance();
+      fetchOXYBLEWalletBalance();
+      fetchLocalClaimableOXYBLEBalance();
     } else {
-      setArixWalletBalance(0);
-      setLocalClaimableArix('0');
+      setOXYBLEWalletBalance(0);
+      setLocalClaimableOXYBLE('0');
     }
-  }, [rawAddress, fetchArixWalletBalance, fetchLocalClaimableArixBalance]);
+  }, [rawAddress, fetchOXYBLEWalletBalance, fetchLocalClaimableOXYBLEBalance]);
   
    useEffect(() => {
-      if (userProfileData?.claimableArixRewards) {
-        setLocalClaimableArix(Math.floor(parseFloat(userProfileData.claimableArixRewards)).toString());
+      if (userProfileData?.claimableOXYBLERewards) {
+        setLocalClaimableOXYBLE(Math.floor(parseFloat(userProfileData.claimableOXYBLERewards)).toString());
       }
-    }, [userProfileData?.claimableArixRewards]);
+    }, [userProfileData?.claimableOXYBLERewards]);
 
   const handleRefreshLocalCardData = () => {
       if(userFriendlyAddress) {
-          fetchArixWalletBalance(true);
-          fetchLocalClaimableArixBalance();
+          fetchOXYBLEWalletBalance(true);
+          fetchLocalClaimableOXYBLEBalance();
       }
       if(onRefreshAllData) onRefreshAllData(true);
   };
@@ -140,7 +140,7 @@ const UserProfileCard = ({
       const response = await requestUsdtWithdrawal({ userWalletAddress: rawAddress, amountUsdt: claimableUsdt });
       message.success({ content: response.data.message || "USDT Withdrawal submitted!", key: 'usdtWithdrawCard', duration: 5 });
       if (onRefreshAllData) onRefreshAllData(false);
-      fetchLocalClaimableArixBalance();
+      fetchLocalClaimableOXYBLEBalance();
     } catch (error) {
       message.error({ content: error?.response?.data?.message || "USDT Withdrawal failed.", key: 'usdtWithdrawCard', duration: 5 });
     } finally {
@@ -148,26 +148,26 @@ const UserProfileCard = ({
     }
   };
 
-  const handleWithdrawArix = async () => {
+  const handleWithdrawOXYBLE = async () => {
     if (!rawAddress || !userProfileData || !currentArxPrice || currentArxPrice <= 0) return;
-    const claimableArixToWithdraw = parseFloat(localClaimableArix || userProfileData.claimableArixRewards || 0);
-    const minArixForWithdrawal = MIN_USDT_WITHDRAWAL_USD_VALUE / currentArxPrice;
+    const claimableOXYBLEToWithdraw = parseFloat(localClaimableOXYBLE || userProfileData.claimableOXYBLERewards || 0);
+    const minOXYBLEForWithdrawal = MIN_USDT_WITHDRAWAL_USD_VALUE / currentArxPrice;
 
-    if (claimableArixToWithdraw < minArixForWithdrawal) {
-      message.warn(`Minimum ARIX withdrawal ~ ${minArixForWithdrawal.toFixed(ARIX_DECIMALS)} ARIX.`);
+    if (claimableOXYBLEToWithdraw < minOXYBLEForWithdrawal) {
+      message.warn(`Minimum OXYBLE withdrawal ~ ${minOXYBLEForWithdrawal.toFixed(OXYBLE_DECIMALS)} OXYBLE.`);
       return;
     }
-    setIsWithdrawArixLoading(true);
-    message.loading({ content: 'Processing ARIX withdrawal...', key: 'arixWithdrawCard', duration: 0 });
+    setIsWithdrawOXYBLELoading(true);
+    message.loading({ content: 'Processing OXYBLE withdrawal...', key: 'OXYBLEWithdrawCard', duration: 0 });
     try {
-      const response = await requestArixRewardWithdrawal({ userWalletAddress: rawAddress, amountArix: claimableArixToWithdraw });
-      message.success({ content: response.data.message || "ARIX Withdrawal submitted!", key: 'arixWithdrawCard', duration: 5 });
+      const response = await requestOXYBLERewardWithdrawal({ userWalletAddress: rawAddress, amountOXYBLE: claimableOXYBLEToWithdraw });
+      message.success({ content: response.data.message || "OXYBLE Withdrawal submitted!", key: 'OXYBLEWithdrawCard', duration: 5 });
       if (onRefreshAllData) onRefreshAllData(false);
-      fetchLocalClaimableArixBalance();
+      fetchLocalClaimableOXYBLEBalance();
     } catch (error) {
-      message.error({ content: error?.response?.data?.message || "ARIX Withdrawal failed.", key: 'arixWithdrawCard', duration: 5 });
+      message.error({ content: error?.response?.data?.message || "OXYBLE Withdrawal failed.", key: 'OXYBLEWithdrawCard', duration: 5 });
     } finally {
-      setIsWithdrawArixLoading(false);
+      setIsWithdrawOXYBLELoading(false);
     }
   };
 
@@ -177,11 +177,11 @@ const UserProfileCard = ({
     navigator.clipboard.writeText(userFriendlyAddress).then(() => message.success('Wallet address copied!')).catch(() => message.error('Failed to copy.'));
   };
 
-  const totalStakedArix = activeStakes?.reduce((sum, stake) => sum + parseFloat(stake.arixAmountStaked || 0), 0) || 0;
-  const totalStakedUsdtEquivalent = currentArxPrice && totalStakedArix > 0 ? (totalStakedArix * currentArxPrice) : 0;
+  const totalStakedOXYBLE = activeStakes?.reduce((sum, stake) => sum + parseFloat(stake.OXYBLEAmountStaked || 0), 0) || 0;
+  const totalStakedUsdtEquivalent = currentArxPrice && totalStakedOXYBLE > 0 ? (totalStakedOXYBLE * currentArxPrice) : 0;
   const claimableUsdtNum = parseFloat(userProfileData?.claimableUsdtBalance || 0);
-  const effectiveClaimableArixNum = parseFloat(localClaimableArix || userProfileData?.claimableArixRewards || 0);
-  const minArixForWithdrawal = currentArxPrice && currentArxPrice > 0 ? (MIN_USDT_WITHDRAWAL_USD_VALUE / currentArxPrice) : Infinity;
+  const effectiveClaimableOXYBLENum = parseFloat(localClaimableOXYBLE || userProfileData?.claimableOXYBLERewards || 0);
+  const minOXYBLEForWithdrawal = currentArxPrice && currentArxPrice > 0 ? (MIN_USDT_WITHDRAWAL_USD_VALUE / currentArxPrice) : Infinity;
 
   if (!userFriendlyAddress && !isDataLoading) {
     return (
@@ -196,10 +196,10 @@ const UserProfileCard = ({
 
   return (
       <Card className="profile-dashboard-card">
-        <Spin spinning={isDataLoading || loadingArixWalletBalance || loadingLocalClaimableArix} tip="Loading details...">
+        <Spin spinning={isDataLoading || loadingOXYBLEWalletBalance || loadingLocalClaimableOXYBLE} tip="Loading details...">
           <Row gutter={isMobile ? [16, 20] : [24, 24]}>
             <Col xs={24} md={24} lg={8} className="dashboard-column">
-              <Title level={5} className="dashboard-column-title">Wallet & ARIX Info</Title>
+              <Title level={5} className="dashboard-column-title">Wallet & OXYBLE Info</Title>
               <Paragraph className="dashboard-text-item ellipsis-text">
                 <Text strong className="dashboard-label">Address:</Text>
                 <Tooltip title={userFriendlyAddress || 'N/A'}>
@@ -211,14 +211,14 @@ const UserProfileCard = ({
                 <Text strong className="dashboard-label">Explorer:</Text>
                 <a href={explorerLink} target="_blank" rel="noopener noreferrer" className="dashboard-link"><GlobalOutlined style={{ marginRight: 4 }} />View on Tonscan</a>
               </Paragraph>
-              <AntdStatistic title="ARIX Wallet Balance" value={arixWalletBalance.toFixed(ARIX_DECIMALS)} suffix=" ARIX" className="dashboard-statistic"/>
-              {currentArxPrice != null && (<Text className="dashboard-value-equivalent">~${(arixWalletBalance * currentArxPrice).toFixed(USDT_DECIMALS)} USD</Text>)}
+              <AntdStatistic title="OXYBLE Wallet Balance" value={OXYBLEWalletBalance.toFixed(OXYBLE_DECIMALS)} suffix=" OXYBLE" className="dashboard-statistic"/>
+              {currentArxPrice != null && (<Text className="dashboard-value-equivalent">~${(OXYBLEWalletBalance * currentArxPrice).toFixed(USDT_DECIMALS)} USD</Text>)}
               
               <div style={{ marginTop: 16, padding: '12px', backgroundColor: 'var(--app-bg-light)', borderRadius: '8px' }}>
                 <Title level={6} style={{ margin: 0, marginBottom: 8, color: 'var(--app-primary-color)' }}>Game/Swap Balances</Title>
                 <div className="balance-item" style={{ marginBottom: 8 }}>
-                  <Text className="balance-label" style={{ fontSize: '12px', color: 'var(--app-text-secondary)' }}>ARIX Balance (Game/Swap):</Text>
-                  <Text className="balance-value" strong style={{ marginLeft: 8, color: 'var(--app-text-primary)' }}>{formatBalance(userProfileData?.balance, 4)} ARIX</Text>
+                  <Text className="balance-label" style={{ fontSize: '12px', color: 'var(--app-text-secondary)' }}>OXYBLE Balance (Game/Swap):</Text>
+                  <Text className="balance-value" strong style={{ marginLeft: 8, color: 'var(--app-text-primary)' }}>{formatBalance(userProfileData?.balance, 4)} OXYBLE</Text>
                 </div>
                 <div className="balance-item" style={{ marginBottom: 8 }}>
                   <Text className="balance-label" style={{ fontSize: '12px', color: 'var(--app-text-secondary)' }}>USDT Balance (Game/Swap):</Text>
@@ -230,13 +230,13 @@ const UserProfileCard = ({
                 </div>
               </div>
               
-              <AntdStatistic title="Current ARIX Price" value={currentArxPrice ? `$${currentArxPrice.toFixed(4)}` : 'Loading...'} valueStyle={{color: '#58D6FF'}} className="dashboard-statistic"/>
+              <AntdStatistic title="Current OXYBLE Price" value={currentArxPrice ? `$${currentArxPrice.toFixed(4)}` : 'Loading...'} valueStyle={{color: '#58D6FF'}} className="dashboard-statistic"/>
             </Col>
 
             <Col xs={24} md={12} lg={8} className="dashboard-column">
               <Title level={5} className="dashboard-column-title">Staking & Rewards</Title>
-              <AntdStatistic title="Total Staked ARIX" value={totalStakedArix.toFixed(ARIX_DECIMALS)} suffix=" ARIX" className="dashboard-statistic"/>
-              {currentArxPrice != null && totalStakedArix > 0 && (<Text className="dashboard-value-equivalent">~${totalStakedUsdtEquivalent.toFixed(USDT_DECIMALS)} USD</Text>)}
+              <AntdStatistic title="Total Staked OXYBLE" value={totalStakedOXYBLE.toFixed(OXYBLE_DECIMALS)} suffix=" OXYBLE" className="dashboard-statistic"/>
+              {currentArxPrice != null && totalStakedOXYBLE > 0 && (<Text className="dashboard-value-equivalent">~${totalStakedUsdtEquivalent.toFixed(USDT_DECIMALS)} USD</Text>)}
               
               <div style={{ marginTop: 16 }}>
                 <AntdStatistic 
@@ -251,24 +251,24 @@ const UserProfileCard = ({
 
               <div style={{marginTop: 16}}>
                 <AntdStatistic 
-                  title="Claimable ARIX (from Staking)" 
-                  value={`${formatBalance(effectiveClaimableArixNum, ARIX_DECIMALS)} ARIX`} 
+                  title="Claimable OXYBLE (from Staking)" 
+                  value={`${formatBalance(effectiveClaimableOXYBLENum, OXYBLE_DECIMALS)} OXYBLE`} 
                   valueStyle={{color: '#FFC107'}} 
                   className="dashboard-statistic claimable"
                 />
-                <Button onClick={handleWithdrawArix} disabled={!currentArxPrice || effectiveClaimableArixNum < minArixForWithdrawal || isWithdrawArixLoading || !userFriendlyAddress} loading={isWithdrawArixLoading} block className="dashboard-button withdraw-arix-button" size="middle">Withdraw ARIX Rewards</Button>
-                {currentArxPrice && effectiveClaimableArixNum > 0 && effectiveClaimableArixNum < minArixForWithdrawal && <Alert message={`Min. ARIX ~ $${MIN_USDT_WITHDRAWAL_USD_VALUE.toFixed(USDT_DECIMALS)}`} type="warning" showIcon className="mini-alert"/>}
+                <Button onClick={handleWithdrawOXYBLE} disabled={!currentArxPrice || effectiveClaimableOXYBLENum < minOXYBLEForWithdrawal || isWithdrawOXYBLELoading || !userFriendlyAddress} loading={isWithdrawOXYBLELoading} block className="dashboard-button withdraw-OXYBLE-button" size="middle">Withdraw OXYBLE Rewards</Button>
+                {currentArxPrice && effectiveClaimableOXYBLENum > 0 && effectiveClaimableOXYBLENum < minOXYBLEForWithdrawal && <Alert message={`Min. OXYBLE ~ $${MIN_USDT_WITHDRAWAL_USD_VALUE.toFixed(USDT_DECIMALS)}`} type="warning" showIcon className="mini-alert"/>}
               </div>
               
-              <Button danger icon={<LogoutOutlined />} onClick={onInitiateUnstakeProcess} disabled={totalStakedArix <= 0 || !userFriendlyAddress} block className="dashboard-button unstake-button" size="middle">Unstake ARIX Now</Button>
-              {totalStakedArix > 0 && <Tooltip title="Early unstake penalty applies. USDT rewards unaffected."><Paragraph className="dashboard-note"><InfoCircleOutlined style={{marginRight: 4}} /> Early unstake penalty applies.</Paragraph></Tooltip>}
+              <Button danger icon={<LogoutOutlined />} onClick={onInitiateUnstakeProcess} disabled={totalStakedOXYBLE <= 0 || !userFriendlyAddress} block className="dashboard-button unstake-button" size="middle">Unstake OXYBLE Now</Button>
+              {totalStakedOXYBLE > 0 && <Tooltip title="Early unstake penalty applies. USDT rewards unaffected."><Paragraph className="dashboard-note"><InfoCircleOutlined style={{marginRight: 4}} /> Early unstake penalty applies.</Paragraph></Tooltip>}
             </Col>
 
             <Col xs={24} md={12} lg={8} className="dashboard-column">
                  <Title level={5} className="dashboard-column-title">Overall Summary</Title>
-                 <AntdStatistic title="Total ARIX Holdings (Wallet + Staked)" value={(arixWalletBalance + totalStakedArix).toFixed(ARIX_DECIMALS)} suffix=" ARIX" className="dashboard-statistic" />
-                 {currentArxPrice != null && <Text className="dashboard-value-equivalent">~${((arixWalletBalance + totalStakedArix) * currentArxPrice).toFixed(USDT_DECIMALS)} USD</Text>}
-                 <AntdStatistic title="Total Claimable Value (USDT + ARIX Rewards)" value={`~$${(claimableUsdtNum + (currentArxPrice ? effectiveClaimableArixNum * currentArxPrice : 0)).toFixed(USDT_DECIMALS)}`} valueStyle={{color: '#A3AECF', fontWeight:'bold'}} className="dashboard-statistic"/>
+                 <AntdStatistic title="Total OXYBLE Holdings (Wallet + Staked)" value={(OXYBLEWalletBalance + totalStakedOXYBLE).toFixed(OXYBLE_DECIMALS)} suffix=" OXYBLE" className="dashboard-statistic" />
+                 {currentArxPrice != null && <Text className="dashboard-value-equivalent">~${((OXYBLEWalletBalance + totalStakedOXYBLE) * currentArxPrice).toFixed(USDT_DECIMALS)} USD</Text>}
+                 <AntdStatistic title="Total Claimable Value (USDT + OXYBLE Rewards)" value={`~$${(claimableUsdtNum + (currentArxPrice ? effectiveClaimableOXYBLENum * currentArxPrice : 0)).toFixed(USDT_DECIMALS)}`} valueStyle={{color: '#A3AECF', fontWeight:'bold'}} className="dashboard-statistic"/>
                  
                  <div style={{ marginTop: 16, padding: '12px', backgroundColor: 'var(--app-bg-light)', borderRadius: '8px' }}>
                    <Title level={6} style={{ margin: 0, marginBottom: 8, color: 'var(--app-primary-color)' }}>Game/Swap Summary</Title>
@@ -284,7 +284,7 @@ const UserProfileCard = ({
                    />
                  </div>
                  
-                 <Button icon={<RedoOutlined />} onClick={handleRefreshLocalCardData} loading={isDataLoading || loadingArixWalletBalance || loadingLocalClaimableArix} block className="dashboard-button refresh-button" size="middle" style={{marginTop: 20}}>Refresh Balances</Button>
+                 <Button icon={<RedoOutlined />} onClick={handleRefreshLocalCardData} loading={isDataLoading || loadingOXYBLEWalletBalance || loadingLocalClaimableOXYBLE} block className="dashboard-button refresh-button" size="middle" style={{marginTop: 20}}>Refresh Balances</Button>
             </Col>
           </Row>
         </Spin>

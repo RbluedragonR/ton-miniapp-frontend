@@ -15,14 +15,14 @@ import { Address, Cell, TonClient, beginCell, toNano as tonToNano } from "@ton/t
 import { getHttpEndpoint } from "@orbs-network/ton-access";
 
 // --- ORIGINAL CONSTANTS (PRESERVED) ---
-export const ARIX_DECIMALS = 9;
+export const OXYBLE_DECIMALS = 9;
 export const USDT_DECIMALS = 6; 
 export const USD_DECIMALS = 2;  
 export const MIN_USDT_WITHDRAWAL_USD_VALUE = 3;
 export const TONCONNECT_MANIFEST_URL = import.meta.env.VITE_TONCONNECT_MANIFEST_URL || '/tonconnect-manifest.json';
 export const TON_NETWORK = import.meta.env.VITE_TON_NETWORK || 'mainnet';
 export const TON_EXPLORER_URL = TON_NETWORK === 'testnet' ? 'https://testnet.tonscan.org' : 'https://tonscan.org';
-export const TELEGRAM_BOT_USERNAME = import.meta.env.VITE_TELEGRAM_BOT_USERNAME || 'arix_terminal_tma_bot';
+export const TELEGRAM_BOT_USERNAME = import.meta.env.VITE_TELEGRAM_BOT_USERNAME || 'OXYBLE_terminal_tma_bot';
 export const REFERRAL_LINK_BASE = import.meta.env.VITE_TMA_URL || window.location.origin;
 export const FALLBACK_IMAGE_URL = '/img/placeholder-image.png';
 export const COINFLIP_HEADS_IMG = '/img/coin_heads.png';
@@ -154,8 +154,8 @@ export const toSmallestUnits = (amount, decimals) => {
     return BigInt(integerPart + paddedDecimalPart);
 };
 
-export const toArixSmallestUnits = (amount) => {
-    return toSmallestUnits(amount, ARIX_DECIMALS);
+export const toOXYBLESmallestUnits = (amount) => {
+    return toSmallestUnits(amount, OXYBLE_DECIMALS);
 };
 
 export const toUsdtSmallestUnits = (amount) => {
@@ -181,8 +181,8 @@ export const fromSmallestUnits = (amountInSmallestUnits, decimals) => {
     }
 };
 
-export const fromArixSmallestUnits = (amountInSmallestUnits) => {
-    return fromSmallestUnits(amountInSmallestUnits, ARIX_DECIMALS);
+export const fromOXYBLESmallestUnits = (amountInSmallestUnits) => {
+    return fromSmallestUnits(amountInSmallestUnits, OXYBLE_DECIMALS);
 };
 
 export const fromUsdtSmallestUnits = (amountInSmallestUnits) => {
@@ -353,8 +353,8 @@ export const createStakeForwardPayload = (params) => {
             .storeUint(params.queryId, 64)
             .storeUint(params.stakeIdentifier, 64)
             .storeUint(params.durationSeconds, 32)
-            .storeUint(params.arix_lock_apr_bps, 16)
-            .storeUint(params.arix_lock_penalty_bps, 16)
+            .storeUint(params.OXYBLE_lock_apr_bps, 16)
+            .storeUint(params.OXYBLE_lock_penalty_bps, 16)
             .endCell();
             
         logWithTimestamp('info', 'Successfully created stake forward payload');

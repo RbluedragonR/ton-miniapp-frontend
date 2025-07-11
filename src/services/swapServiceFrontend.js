@@ -3,7 +3,7 @@ import api from './api';
 
 /**
  * Fetches the swap rate for a given currency pair.
- * @param {string} from - The currency to swap from (e.g., 'ARIX').
+ * @param {string} from - The currency to swap from (e.g., 'OXYBLE').
  * @param {string} to - The currency to swap to (e.g., 'USDT').
  * @returns {Promise<object>} A promise that resolves to the swap quote.
  */

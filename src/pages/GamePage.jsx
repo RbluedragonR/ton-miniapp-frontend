@@ -11,7 +11,7 @@ const GamePage = ({ user, loadingUser }) => {
     const navigate = useNavigate();
 
     // The balance displayed is now the user's internal game balance, not claimable rewards.
-    const gameArixBalance = user ? parseFloat(user.balance || 0).toFixed(2) : '0.00';
+    const gameOXYBLEBalance = user ? parseFloat(user.balance || 0).toFixed(2) : '0.00';
 
     const handleNavigate = (path) => {
         navigate(path);
@@ -24,20 +24,20 @@ const GamePage = ({ user, loadingUser }) => {
                     <div className="balance-info-box">
                         <div className="balance-amount-line">
                             <div className="balance-icon-wrapper">
-                                <span className="balance-icon-representation">♢</span>
+                                <img src="/img/oxyble-balance.png" alt="oxyble-balance" />
                             </div>
                             <Text className="push-balance-amount">
-                                {loadingUser ? <Spin size="small" wrapperClassName="balance-spin" /> : gameArixBalance}
+                                {loadingUser ? <Spin size="small" wrapperClassName="balance-spin" /> : gameOXYBLEBalance}
                             </Text>
                         </div>
-                        <Text className="push-balance-currency">ARIX</Text>
+                        <Text className="push-balance-currency">OXYBLE</Text>
                     </div>
                 </div>
             </div>
 
-            <div className="game-page-top-banner">
+            {/* <div className="game-page-top-banner">
                 <Text className="game-page-top-banner-text">Up to 1000x? Play Plinko Galaxy and find your fortune! →</Text>
-            </div>
+            </div> */}
 
             <Title level={1} className="game-page-title">Games</Title>
             <Paragraph className="game-page-intro-text">
@@ -49,7 +49,7 @@ const GamePage = ({ user, loadingUser }) => {
                 <Card className="game-card" hoverable onClick={() => handleNavigate('/game/plinko')}>
                     <div className="game-card-row">
                         <div className="game-card-image-section">
-                            <img 
+                            <img
                                 src="/img/plinko-card-visual.png" // Uses the new SVG icon
                                 alt="Plinko Game Visual"
                                 onError={(e) => { e.currentTarget.src = 'https://placehold.co/100x100/1a1a2e/ffffff?text=Plinko'; }}
@@ -73,8 +73,8 @@ const GamePage = ({ user, loadingUser }) => {
                 <Card className="game-card" hoverable onClick={() => handleNavigate('/game/coinflip')}>
                     <div className="game-card-row">
                         <div className="game-card-image-section">
-                            <img 
-                                src="/img/coinflip-card-visual.png" 
+                            <img
+                                src="/img/coinflip-card-visual.png"
                                 alt="Coinflip Game Visual"
                                 onError={(e) => { e.currentTarget.src = 'https://placehold.co/100x100/1a1a2e/ffffff?text=Coin'; }}
                             />
@@ -86,7 +86,7 @@ const GamePage = ({ user, loadingUser }) => {
                             </Paragraph>
                             <Button className="game-card-button">
                                 <span className="button-icon-circle"></span>
-                                Test your luck 
+                                Test your luck
                                 <span className="button-arrow">→</span>
                             </Button>
                         </div>
@@ -97,7 +97,7 @@ const GamePage = ({ user, loadingUser }) => {
                 <Card className="game-card" hoverable onClick={() => handleNavigate('/game/crash')}>
                     <div className="game-card-row">
                         <div className="game-card-image-section">
-                            <img 
+                            <img
                                 src="/img/crash-card-visual.png"
                                 alt="Crash Game Visual"
                                 onError={(e) => { e.currentTarget.src = 'https://placehold.co/100x100/1a1a2e/ffffff?text=Crash'; }}

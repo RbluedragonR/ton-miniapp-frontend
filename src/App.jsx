@@ -122,15 +122,15 @@ function App() {
         const urlParams = new URLSearchParams(window.location.search);
         const refCode = urlParams.get('ref');
         if (refCode) {
-            localStorage.setItem('arixReferralCode', refCode);
+            localStorage.setItem('OXYBLEReferralCode', refCode);
         }
 
         if (window.Telegram && window.Telegram.WebApp) {
             const tg = window.Telegram.WebApp;
             tg.ready();
             tg.expand();
-            tg.setHeaderColor('#111215');
-            tg.setBackgroundColor('#000000');
+            tg.setHeaderColor('#1C082E');
+            tg.setBackgroundColor('#1C082E');
         }
     }, [setOptions]);
 
@@ -144,7 +144,7 @@ function App() {
                     const launchParams = {
                         telegram_id: urlParams.get('telegram_id'),
                         username: urlParams.get('username'),
-                        referrer: localStorage.getItem('arixReferralCode'),
+                        referrer: localStorage.getItem('OXYBLEReferralCode'),
                     };
                     const { data: profile } = await getUserProfile(wallet.account.address, launchParams);
                     setUser(profile);
@@ -165,7 +165,7 @@ function App() {
     const APP_BG_DARK_ELEMENT = '#08090A';
     const APP_BG_DARK_SECTION = '#111215';
     const APP_BG_DARK_CONTAINER = '#1C1C1E';
-    const APP_MAIN_BG = '#000000';
+    const APP_MAIN_BG = '#1C082E';
     const APP_BORDER_COLOR = '#2D3142';
     const APP_BUTTON_PRIMARY_BG = '#A3AECF'; 
     const APP_BUTTON_PRIMARY_TEXT = '#08090A'; 
@@ -348,8 +348,8 @@ function App() {
             <Layout className="app-layout">
                 <Header className="app-header">
                     <div className="app-header-logo-area">
-                        <img src="/img/arix-logo-header.png" alt="ARIX" className="app-header-logo" onError={(e) => e.currentTarget.style.display = 'none'} />
-                        <Title level={isMobile ? 5 : 4} className="app-header-title">TERMINAL</Title>
+                        <img src="/img/OXYBLE-logo-header.png" alt="OXYBLE" className="app-header-logo" onError={(e) => e.currentTarget.style.display = 'none'} />
+                        <Title level={isMobile ? 5 : 4} className="app-header-title">OXYBLE</Title>
                     </div>
                     <TonConnectButton className="ton-connect-button-custom" />
                 </Header>

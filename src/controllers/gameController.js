@@ -1,6 +1,6 @@
 
 const gameService = require('../services/gameService'); 
-const { ARIX_TOKEN_MASTER_ADDRESS } = require('../config/envConfig');
+const { OXYBLE_TOKEN_MASTER_ADDRESS } = require('../config/envConfig');
 const { Address } = require('@ton/core'); 
 
 
@@ -15,18 +15,18 @@ const isValidTonAddress = (addr) => {
 
 exports.handleCoinflipBet = async (req, res, next) => {
     try {
-        const { userWalletAddress, betAmountArix, choice } = req.body;
+        const { userWalletAddress, betAmountOXYBLE, choice } = req.body;
 
         
-        if (!userWalletAddress || !betAmountArix || !choice) {
-            return res.status(400).json({ message: "Missing required bet information (userWalletAddress, betAmountArix, choice)." });
+        if (!userWalletAddress || !betAmountOXYBLE || !choice) {
+            return res.status(400).json({ message: "Missing required bet information (userWalletAddress, betAmountOXYBLE, choice)." });
         }
         if (!isValidTonAddress(userWalletAddress)) {
              return res.status(400).json({ message: "Invalid userWalletAddress format." });
         }
-        const numericBetAmount = parseFloat(betAmountArix);
+        const numericBetAmount = parseFloat(betAmountOXYBLE);
         if (isNaN(numericBetAmount) || numericBetAmount <= 0) {
-            return res.status(400).json({ message: "Invalid ARIX bet amount."});
+            return res.status(400).json({ message: "Invalid OXYBLE bet amount."});
         }
         if (choice !== 'heads' && choice !== 'tails') {
             return res.status(400).json({ message: "Invalid choice. Must be 'heads' or 'tails'." });
@@ -40,7 +40,7 @@ exports.handleCoinflipBet = async (req, res, next) => {
 
         const gameResult = await gameService.playCoinflip({
             userWalletAddress,
-            betAmountArix: numericBetAmount,
+            betAmountOXYBLE: numericBetAmount,
             choice
         });
 

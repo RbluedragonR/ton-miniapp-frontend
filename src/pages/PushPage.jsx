@@ -12,7 +12,7 @@
  * address and the required user-specific memo.
  * - The placeholder Cashout Modal content has been replaced with a functional Ant Design form for submitting
  * withdrawals, including validation and loading states.
- * - The header now correctly displays the `balance` (the in-app funds) instead of the `claimableArixRewards`.
+ * - The header now correctly displays the `balance` (the in-app funds) instead of the `claimableOXYBLERewards`.
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
@@ -28,14 +28,14 @@ import {
     FireOutlined
 } from '@ant-design/icons';
 import { useTonAddress } from '@tonconnect/ui-react';
-import { getUserProfile, withdrawArix } from '../services/api';
+import { getUserProfile, withdrawOXYBLE } from '../services/api';
 
 import './PushPage.css';
 
 const { Text, Paragraph } = Typography;
 
-const ArixPushIcon = () => (
-    <img src="/img/arix-diamond.png" alt="ARIX" className="push-page-arix-icon" onError={(e) => { e.currentTarget.src = '/img/fallback-icon.png'; }} />
+const OXYBLEPushIcon = () => (
+    <img src="/img/OXYBLE-diamond.png" alt="OXYBLE" className="push-page-OXYBLE-icon" onError={(e) => { e.currentTarget.src = '/img/fallback-icon.png'; }} />
 );
 
 // Hot wallet address from environment variables
@@ -127,7 +127,7 @@ const PushPage = () => {
 
     // Copy to clipboard utility
     const copyToClipboard = (textToCopy) => {
-        if (!textToCopy || textToCopy === "YOUR_PROJECT_ARIX_DEPOSIT_WALLET_ADDRESS_HERE") {
+        if (!textToCopy || textToCopy === "YOUR_PROJECT_OXYBLE_DEPOSIT_WALLET_ADDRESS_HERE") {
             message.error('Deposit address not configured.');
             return;
         }
@@ -143,7 +143,7 @@ const PushPage = () => {
     const handleCashout = async (values) => {
         const { amount } = values;
         const recipientAddress = userWalletAddress; // Withdraw to the connected wallet
-        
+
         if (parseFloat(amount) > parseFloat(profile?.balance || 0)) {
             message.error("Withdrawal amount cannot exceed your balance.");
             return;
@@ -151,7 +151,7 @@ const PushPage = () => {
 
         setCashoutLoading(true);
         try {
-            const result = await withdrawArix({
+            const result = await withdrawOXYBLE({
                 userWalletAddress: rawAddress,
                 amount: parseFloat(amount),
                 recipientAddress
@@ -185,13 +185,13 @@ const PushPage = () => {
                     <div className="balance-info-box">
                         <div className="balance-amount-line">
                             <div className="balance-icon-wrapper">
-                                <span className="balance-icon-representation">♢</span>
+                                <img src="/img/oxyble-balance.png" alt="oxyble-balance" />
                             </div>
                             <Text className="push-balance-amount">
                                 {loadingBalance ? <Spin size="small" wrapperClassName="balance-spin" /> : parseFloat(profile?.balance || 0).toFixed(2)}
                             </Text>
                         </div>
-                        <Text className="push-balance-currency">ARIX</Text>
+                        <Text className="push-balance-currency">OXYBLE</Text>
                     </div>
                 </div>
 
@@ -294,7 +294,7 @@ const PushPage = () => {
                         </ol>
                     </div>
                     <Paragraph className="bottom-sheet-text coinflip-prompt">
-                        In the meantime, try your luck in Coinflip! Can you turn your ARIX bet into x256?
+                        In the meantime, try your luck in Coinflip! Can you turn your OXYBLE bet into x256?
                     </Paragraph>
                     <Button type="primary" size="large" block className="play-coinflip-button-sheet" onClick={() => handleCloseMainBottomSheet(true)}>
                         Play Coinflip!
@@ -324,7 +324,7 @@ const PushPage = () => {
                         aria-label="Close Top up"
                     />
                     <div className="topup-modal-header">
-                        <ArixPushIcon />
+                        <OXYBLEPushIcon />
                         <Text className="topup-modal-title">Balance</Text>
                     </div>
                     <div className="topup-modal-actions">
@@ -336,7 +336,7 @@ const PushPage = () => {
                         </Button>
                     </div>
                     <Alert
-                        message="Send only ARIX assets to this address"
+                        message="Send only OXYBLE assets to this address"
                         description="Other assets will be irrevocably lost."
                         type="warning"
                         showIcon
@@ -344,8 +344,8 @@ const PushPage = () => {
                         className="topup-warning-alert"
                     />
                     <div className="topup-instructions">
-                        <Text className="instruction-link" onClick={() => message.info("How it works: Send ARIX to the address below with your wallet address as memo.")}>How it works</Text>
-                        <Text className="instruction-link" onClick={() => message.info("Instructions: 1. Copy deposit address 2. Copy your memo 3. Send ARIX with memo")}>Instruction</Text>
+                        <Text className="instruction-link" onClick={() => message.info("How it works: Send OXYBLE to the address below with your wallet address as memo.")}>How it works</Text>
+                        <Text className="instruction-link" onClick={() => message.info("Instructions: 1. Copy deposit address 2. Copy your memo 3. Send OXYBLE with memo")}>Instruction</Text>
                     </div>
                     <Paragraph className="address-label">DEPOSIT ADDRESS</Paragraph>
                     <div className="address-display-box">
@@ -353,14 +353,14 @@ const PushPage = () => {
                             {HOT_WALLET_ADDRESS}
                         </Text>
                     </div>
-                    
+
                     <Paragraph className="address-label" style={{ marginTop: '16px' }}>REQUIRED MEMO / COMMENT</Paragraph>
-                    <Alert 
-                        message="MEMO IS REQUIRED" 
-                        description="You MUST put your wallet address in the transaction's memo/comment field to be credited." 
-                        type="error" 
-                        showIcon 
-                        className="topup-warning-alert" 
+                    <Alert
+                        message="MEMO IS REQUIRED"
+                        description="You MUST put your wallet address in the transaction's memo/comment field to be credited."
+                        type="error"
+                        showIcon
+                        className="topup-warning-alert"
                     />
                     <div className="address-display-box">
                         <Text className="deposit-address-text" copyable={{ text: userWalletAddress, tooltips: ['Copy', 'Copied!'] }}>
@@ -369,10 +369,10 @@ const PushPage = () => {
                     </div>
 
                     <Paragraph className="fee-info-text">
-                        A fee of <Text strong>0.05 ARIX</Text> is applied to all deposits. <Text strong>MEMO is required</Text>
+                        A fee of <Text strong>0.05 OXYBLE</Text> is applied to all deposits. <Text strong>MEMO is required</Text>
                     </Paragraph>
                     <Paragraph className="min-deposit-info">
-                        <InfoCircleOutlined /> Deposit minimum <Text strong>1 ARIX</Text>
+                        <InfoCircleOutlined /> Deposit minimum <Text strong>1 OXYBLE</Text>
                     </Paragraph>
                     <Button
                         type="primary"
@@ -408,7 +408,7 @@ const PushPage = () => {
                         aria-label="Close Cashout"
                     />
                     <div className="cashout-modal-header">
-                        <ArixPushIcon />
+                        <OXYBLEPushIcon />
                         <Text className="cashout-modal-title">Balance</Text>
                     </div>
                     <div className="cashout-modal-actions">
@@ -422,7 +422,7 @@ const PushPage = () => {
 
                     <div className='cashout-balance-info'>
                         <Text>Available to withdraw:</Text>
-                        <Text strong>{loadingBalance ? <Spin size="small" /> : `${parseFloat(profile?.balance || 0).toFixed(2)} ARIX`}</Text>
+                        <Text strong>{loadingBalance ? <Spin size="small" /> : `${parseFloat(profile?.balance || 0).toFixed(2)} OXYBLE`}</Text>
                     </div>
 
                     <Form form={cashoutForm} onFinish={handleCashout} layout="vertical" disabled={cashoutLoading}>
@@ -447,12 +447,12 @@ const PushPage = () => {
                             <Input type="number" placeholder="e.g., 100" />
                         </Form.Item>
                         <Form.Item label="Withdrawal Address">
-                             <Input value={userWalletAddress} disabled />
-                             <Text type="secondary" style={{fontSize: '12px'}}>Funds will be sent to your connected wallet.</Text>
+                            <Input value={userWalletAddress} disabled />
+                            <Text type="secondary" style={{ fontSize: '12px' }}>Funds will be sent to your connected wallet.</Text>
                         </Form.Item>
                         <Form.Item>
                             <Button type="primary" htmlType="submit" block loading={cashoutLoading}>
-                                Withdraw ARIX
+                                Withdraw OXYBLE
                             </Button>
                         </Form.Item>
                     </Form>

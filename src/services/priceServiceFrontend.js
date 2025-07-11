@@ -11,10 +11,10 @@ export const getArxUsdtPriceFromBackend = async () => {
     if (response.data && typeof response.data.price === 'number') {
       return response.data.price;
     }
-    console.warn("Could not get ARIX price from backend dedicated endpoint (priceServiceFrontend.js):", response.data);
+    console.warn("Could not get OXYBLE price from backend dedicated endpoint (priceServiceFrontend.js):", response.data);
     return null;
   } catch (error) {
-    let errorMessage = "Error fetching ARIX/USDT price via backend.";
+    let errorMessage = "Error fetching OXYBLE/USDT price via backend.";
     if (error.isAxiosError && error.response) {
       errorMessage += ` Status: ${error.response.status}, Data: ${JSON.stringify(error.response.data)}`;
     } else if (error.isAxiosError && error.request) {

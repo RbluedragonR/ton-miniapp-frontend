@@ -17,11 +17,11 @@ import UserProfileCard from '../components/user/UserProfileCard';
 import TransactionList, { renderStakeHistoryItem, renderCoinflipHistoryItem } from '../components/user/TransactionList';
 import {
     getUserProfile, getUserStakesAndRewards, getCoinflipHistoryForUser, getUserReferralData,
-    getReferralProgramDetails, initiateArixUnstake, confirmArixUnstake, withdrawArix
+    getReferralProgramDetails, initiateOXYBLEUnstake, confirmOXYBLEUnstake, withdrawOXYBLE
 } from '../services/api';
 import { getArxUsdtPriceFromBackend } from '../services/priceServiceFrontend';
 import { toNano, Cell } from '@ton/core';
-import { waitForTransactionConfirmation, REFERRAL_LINK_BASE, USDT_DECIMALS, ARIX_DECIMALS } from '../utils/tonUtils';
+import { waitForTransactionConfirmation, REFERRAL_LINK_BASE, USDT_DECIMALS, OXYBLE_DECIMALS } from '../utils/tonUtils';
 import './UserPage.css';
 
 const { Title, Text, Paragraph } = Typography;
@@ -30,8 +30,8 @@ const { useBreakpoint } = Grid;
 
 // --- REUSABLE COMPONENTS & UTILITIES ---
 
-const ArixPushIcon = () => (
-    <img src="/img/arix-diamond.png" alt="ARIX" className="push-page-arix-icon" onError={(e) => { e.currentTarget.src = '/img/fallback-icon.png'; }} />
+const OXYBLEPushIcon = () => (
+    <img src="/img/OXYBLE-diamond.png" alt="OXYBLE" className="push-page-OXYBLE-icon" onError={(e) => { e.currentTarget.src = '/img/fallback-icon.png'; }} />
 );
 
 const HOT_WALLET_ADDRESS = import.meta.env.VITE_HOT_WALLET_ADDRESS;
@@ -63,7 +63,7 @@ const UserPage = () => {
     const [userProfile, setUserProfile] = useState(null);
     const [referralData, setReferralData] = useState(null);
     const [programDetails, setProgramDetails] = useState({ message: '', plans: [] });
-    const [stakesAndRewards, setStakesAndRewards] = useState({ stakes: [], totalClaimableUsdt: '0.00', totalClaimableArix: '0.00' });
+    const [stakesAndRewards, setStakesAndRewards] = useState({ stakes: [], totalClaimableUsdt: '0.00', totalClaimableOXYBLE: '0.00' });
     const [coinflipHistory, setCoinflipHistory] = useState([]);
     const [currentArxPrice, setCurrentArxPrice] = useState(null);
 
@@ -97,7 +97,7 @@ const UserPage = () => {
     const fetchAllUserData = useCallback(async (showMessages = false) => {
         if (!rawAddress) {
             setUserProfile(null); setReferralData(null); setProgramDetails({ message: '', plans: [] });
-            setStakesAndRewards({ stakes: [], totalClaimableUsdt: '0.00', totalClaimableArix: '0.00' });
+            setStakesAndRewards({ stakes: [], totalClaimableUsdt: '0.00', totalClaimableOXYBLE: '0.00' });
             setCoinflipHistory([]); setCurrentArxPrice(null);
             setLoadingProfile(false); setLoadingReferral(false); setLoadingProgramDetails(false);
             setLoadingStakes(false); setLoadingGames(false);
@@ -111,7 +111,7 @@ const UserPage = () => {
 
         try {
             const tgLaunchParams = new URLSearchParams(window.location.search);
-            const refCodeFromUrl = tgLaunchParams.get('ref') || localStorage.getItem('arixReferralCode');
+            const refCodeFromUrl = tgLaunchParams.get('ref') || localStorage.getItem('OXYBLEReferralCode');
 
             const profilePromise = getUserProfile(rawAddress, {
                 telegram_id: window.Telegram?.WebApp?.initDataUnsafe?.user?.id,
@@ -134,7 +134,7 @@ const UserPage = () => {
             setStakesAndRewards({
                 stakes: stakesRes.data?.stakes || [],
                 totalClaimableUsdt: stakesRes.data?.totalClaimableUsdt || '0.00',
-                totalClaimableArix: stakesRes.data?.totalClaimableArix || '0.00'
+                totalClaimableOXYBLE: stakesRes.data?.totalClaimableOXYBLE || '0.00'
             });
             setCoinflipHistory(gamesRes.data || []);
             setCurrentArxPrice(priceRes);
@@ -168,7 +168,7 @@ const UserPage = () => {
         }
         setCashoutLoading(true);
         try {
-            await withdrawArix({
+            await withdrawOXYBLE({
                 userWalletAddress: rawAddress,
                 amount: parseFloat(amount),
                 recipientAddress: userFriendlyAddress // The API sends it back to the connected wallet
@@ -192,8 +192,8 @@ const UserPage = () => {
         }
         if (navigator.share) {
             navigator.share({
-                title: 'Join ARIX Terminal!',
-                text: `Join me on ARIX Terminal to stake ARIX, earn USDT rewards, and play games! Use my referral link: ${linkToShare}`,
+                title: 'Join OXYBLE Terminal!',
+                text: `Join me on OXYBLE Terminal to stake OXYBLE, earn USDT rewards, and play games! Use my referral link: ${linkToShare}`,
                 url: linkToShare,
             }).catch(() => copyToClipboard(linkToShare, 'Link copied for manual sharing.'));
         } else {
@@ -202,7 +202,7 @@ const UserPage = () => {
     };
 
     const handleTabChange = (key) => setActiveTabKey(key);
-    
+
     // --- UNSTAKE LOGIC ---
     const activeUserStakes = stakesAndRewards.stakes.filter(s => s.status === 'active');
 
@@ -224,7 +224,7 @@ const UserPage = () => {
         setSelectedStakeForUnstake(stake); setIsUnstakeActionLoading(true);
         message.loading({ content: 'Preparing unstake...', key: 'prepUnstakeUser', duration: 0 });
         try {
-            const response = await initiateArixUnstake({ userWalletAddress: rawAddress, stakeId: stake.id });
+            const response = await initiateOXYBLEUnstake({ userWalletAddress: rawAddress, stakeId: stake.id });
             setUnstakePrepDetails(response.data); setIsUnstakeModalVisible(true);
             message.destroy('prepUnstakeUser');
         } catch (error) {
@@ -247,18 +247,18 @@ const UserPage = () => {
         try {
             const scStakeId = selectedStakeForUnstake.id.replace(/-/g, '').substring(0, 16);
             const payload = new Cell().asBuilder().storeUint(BigInt(Date.now()), 64).storeUint(BigInt('0x' + scStakeId), 64).asCell();
-            const tx = { validUntil: Math.floor(Date.now()/1000)+360, messages: [{ address: import.meta.env.VITE_STAKING_CONTRACT_ADDRESS, amount: toNano("0.05").toString(), payload: payload.toBoc().toString("base64") }] };
+            const tx = { validUntil: Math.floor(Date.now() / 1000) + 360, messages: [{ address: import.meta.env.VITE_STAKING_CONTRACT_ADDRESS, amount: toNano("0.05").toString(), payload: payload.toBoc().toString("base64") }] };
             const result = await tonConnectUI.sendTransaction(tx);
             message.loading({ content: 'Awaiting confirmation...', key: 'confirmUnstakeUser', duration: 0 });
             const txHash = await waitForTransactionConfirmation(rawAddress, Cell.fromBase64(result.boc), 180000, 5000);
             if (!txHash) throw new Error('Blockchain confirmation failed.');
             message.loading({ content: 'Finalizing unstake...', key: 'confirmUnstakeUser', duration: 0 });
-            await confirmArixUnstake({ userWalletAddress: rawAddress, stakeId: selectedStakeForUnstake.id, unstakeTransactionBoc: result.boc, unstakeTransactionHash: txHash });
-            message.success({ content: "ARIX unstake submitted!", key: 'confirmUnstakeUser', duration: 7 });
+            await confirmOXYBLEUnstake({ userWalletAddress: rawAddress, stakeId: selectedStakeForUnstake.id, unstakeTransactionBoc: result.boc, unstakeTransactionHash: txHash });
+            message.success({ content: "OXYBLE unstake submitted!", key: 'confirmUnstakeUser', duration: 7 });
             setIsUnstakeModalVisible(false); setSelectedStakeForUnstake(null); setUnstakePrepDetails(null); setStakeToSelectForUnstakeId(undefined);
             fetchAllUserData(false);
         } catch (err) {
-            message.error({ content: err?.response?.data?.message || err?.message || 'ARIX unstake failed.', key: 'confirmUnstakeUser', duration: 6 });
+            message.error({ content: err?.response?.data?.message || err?.message || 'OXYBLE unstake failed.', key: 'confirmUnstakeUser', duration: 6 });
         } finally {
             setIsUnstakeActionLoading(false);
         }
@@ -266,19 +266,21 @@ const UserPage = () => {
 
     // --- RENDER LOGIC ---
     const combinedLoadingOverall = loadingProfile || loadingReferral || loadingProgramDetails || loadingStakes || loadingGames;
-    
+
     if (!userFriendlyAddress && !combinedLoadingOverall) {
         return (
             <div className="user-page-container">
                 <div className="page-header-section">
-                     <div className="balance-display-box">
+                    <div className="balance-display-box">
                         <div className="balance-amount-line">
-                            <div className="balance-icon-wrapper"><span className="balance-icon-representation">♢</span></div>
-                            <Text className="balance-amount-value"><Spin size="small" wrapperClassName="balance-spin"/></Text>
+                            <div className="balance-icon-wrapper">
+                                <img src="/img/oxyble-balance.png" alt="oxyble-balance" />
+                            </div>
+                            <Text className="balance-amount-value"><Spin size="small" wrapperClassName="balance-spin" /></Text>
                         </div>
-                        <Text className="balance-currency-label">ARIX In-App Balance</Text>
+                        <Text className="balance-currency-label">OXYBLE In-App Balance</Text>
                     </div>
-                     <div className="topup-cashout-buttons">
+                    <div className="topup-cashout-buttons">
                         <Button icon={<ArrowDownOutlined />} disabled>Top up</Button>
                         <Button icon={<ArrowUpOutlined />} disabled>Cashout</Button>
                     </div>
@@ -299,7 +301,7 @@ const UserPage = () => {
             </div>
         );
     }
-    
+
     const referralLinkToDisplay = referralData?.referralLink || (referralData?.referralCode ? `${REFERRAL_LINK_BASE}?ref=${referralData.referralCode}` : (rawAddress ? `${REFERRAL_LINK_BASE}?ref=${rawAddress}` : ''));
     const referralCodeForBoxes = (referralData?.referralCode || rawAddress || "--------").slice(-8).toUpperCase();
 
@@ -309,19 +311,19 @@ const UserPage = () => {
             label: <span className="user-tab-label"><TeamOutlined /> Referral Stats</span>,
             children: (
                 <Spin spinning={loadingReferral || loadingProgramDetails} tip="Loading referral data...">
-                    <Row gutter={isMobile ? [16,16] : [24, 24]}>
+                    <Row gutter={isMobile ? [16, 16] : [24, 24]}>
                         <Col xs={24} md={12}>
-                            <Card className="dark-theme-card referral-stats-card" title={<><UsergroupAddOutlined style={{marginRight: 8}} /> Your Network</>}>
+                            <Card className="dark-theme-card referral-stats-card" title={<><UsergroupAddOutlined style={{ marginRight: 8 }} /> Your Network</>}>
                                 <AntdStatistic title="Direct Referrals (Level 1)" value={referralData?.l1ReferralCount ?? 0} />
-                                <AntdStatistic title="Indirect Referrals (Level 2)" value={referralData?.l2ReferralCount ?? 0} style={{marginTop: 12}}/>
-                                <AntdStatistic title="Total Users Invited" value={referralData?.totalUsersInvited ?? 0} valueStyle={{color: '#A3AECF', fontWeight: 'bold'}} style={{marginTop: 12}}/>
+                                <AntdStatistic title="Indirect Referrals (Level 2)" value={referralData?.l2ReferralCount ?? 0} style={{ marginTop: 12 }} />
+                                <AntdStatistic title="Total Users Invited" value={referralData?.totalUsersInvited ?? 0} valueStyle={{ color: '#A3AECF', fontWeight: 'bold' }} style={{ marginTop: 12 }} />
                             </Card>
                         </Col>
                         <Col xs={24} md={12}>
-                            <Card className="dark-theme-card referral-stats-card" title={<><DollarCircleOutlined style={{marginRight: 8}}/> Your Earnings (USDT)</>}>
-                                <AntdStatistic title="Level 1 Earnings" value={`$${parseFloat(referralData?.l1EarningsUsdt ?? 0).toFixed(USDT_DECIMALS)}`} valueStyle={{color: '#4CAF50'}} />
-                                <AntdStatistic title="Level 2 Earnings" value={`$${parseFloat(referralData?.l2EarningsUsdt ?? 0).toFixed(USDT_DECIMALS)}`} valueStyle={{color: '#4CAF50'}} style={{marginTop: 12}}/>
-                                <AntdStatistic title="Total Referral Earnings" value={`$${parseFloat(referralData?.totalReferralEarningsUsdt ?? 0).toFixed(USDT_DECIMALS)}`} valueStyle={{color: '#A3AECF', fontWeight: 'bold'}} style={{marginTop: 12}}/>
+                            <Card className="dark-theme-card referral-stats-card" title={<><DollarCircleOutlined style={{ marginRight: 8 }} /> Your Earnings (USDT)</>}>
+                                <AntdStatistic title="Level 1 Earnings" value={`$${parseFloat(referralData?.l1EarningsUsdt ?? 0).toFixed(USDT_DECIMALS)}`} valueStyle={{ color: '#4CAF50' }} />
+                                <AntdStatistic title="Level 2 Earnings" value={`$${parseFloat(referralData?.l2EarningsUsdt ?? 0).toFixed(USDT_DECIMALS)}`} valueStyle={{ color: '#4CAF50' }} style={{ marginTop: 12 }} />
+                                <AntdStatistic title="Total Referral Earnings" value={`$${parseFloat(referralData?.totalReferralEarningsUsdt ?? 0).toFixed(USDT_DECIMALS)}`} valueStyle={{ color: '#A3AECF', fontWeight: 'bold' }} style={{ marginTop: 12 }} />
                             </Card>
                         </Col>
                     </Row>
@@ -332,9 +334,9 @@ const UserPage = () => {
             key: 'referral_structure',
             label: <span className="user-tab-label"><RiseOutlined /> Reward Structure</span>,
             children: (
-                 <Spin spinning={loadingProgramDetails} tip="Loading program details...">
-                    <Paragraph className="text-secondary-light" style={{textAlign: 'center', marginBottom: 20, padding: '0 16px'}}>
-                        {programDetails.message || 'Earn rewards by inviting new users who stake ARIX. Rewards are based on their chosen plan.'}
+                <Spin spinning={loadingProgramDetails} tip="Loading program details...">
+                    <Paragraph className="text-secondary-light" style={{ textAlign: 'center', marginBottom: 20, padding: '0 16px' }}>
+                        {programDetails.message || 'Earn rewards by inviting new users who stake OXYBLE. Rewards are based on their chosen plan.'}
                     </Paragraph>
                     {programDetails.plans && programDetails.plans.length > 0 ? (
                         <List
@@ -359,12 +361,12 @@ const UserPage = () => {
         {
             key: 'stakes_history',
             label: <span className="user-tab-label"><HistoryOutlined /> Staking History</span>,
-            children: <TransactionList items={stakesAndRewards.stakes} isLoading={loadingStakes} renderItemDetails={renderStakeHistoryItem} itemType="staking activity" listTitle={null} onUnstakeItemClick={prepareForUnstakeModal}/>,
+            children: <TransactionList items={stakesAndRewards.stakes} isLoading={loadingStakes} renderItemDetails={renderStakeHistoryItem} itemType="staking activity" listTitle={null} onUnstakeItemClick={prepareForUnstakeModal} />,
         },
         {
             key: 'games_history',
             label: <span className="user-tab-label"><ExperimentOutlined /> Game History</span>,
-            children: <TransactionList items={coinflipHistory} isLoading={loadingGames} renderItemDetails={renderCoinflipHistoryItem} itemType="Coinflip game" listTitle={null}/>,
+            children: <TransactionList items={coinflipHistory} isLoading={loadingGames} renderItemDetails={renderCoinflipHistoryItem} itemType="Coinflip game" listTitle={null} />,
         },
     ];
 
@@ -375,12 +377,14 @@ const UserPage = () => {
                 <div className="page-header-section">
                     <div className="balance-display-box">
                         <div className="balance-amount-line">
-                            <div className="balance-icon-wrapper"><span className="balance-icon-representation">♢</span></div>
+                            <div className="balance-icon-wrapper">
+                                <img src="/img/oxyble-balance.png" alt="oxyble-balance" />
+                            </div>
                             <Text className="balance-amount-value">
-                                {loadingProfile ? <Spin size="small"/> : parseFloat(userProfile?.balance || 0).toFixed(2)}
+                                {loadingProfile ? <Spin size="small" /> : parseFloat(userProfile?.balance || 0).toFixed(2)}
                             </Text>
                         </div>
-                        <Text className="balance-currency-label">ARIX In-App Balance</Text>
+                        <Text className="balance-currency-label">OXYBLE In-App Balance</Text>
                     </div>
                     <div className="topup-cashout-buttons">
                         <Button icon={<ArrowDownOutlined />} onClick={() => setShowTopUpModal(true)}>Top up</Button>
@@ -399,7 +403,7 @@ const UserPage = () => {
                             <div key={index} className="referral-code-box">{char}</div>
                         ))}
                     </div>
-                     <Paragraph className="referral-link-display">
+                    <Paragraph className="referral-link-display">
                         <Text
                             className="referral-link-text"
                             copyable={referralLinkToDisplay ? { text: referralLinkToDisplay, tooltips: ['Copy Link', 'Copied!'], icon: <CopyOutlined style={{ marginLeft: 8 }} /> } : false}
@@ -433,7 +437,7 @@ const UserPage = () => {
                         </Button>
                     </div>
                 </div>
-                
+
                 {/* --- SETTINGS SECTION --- */}
                 <div className="settings-section-wrapper">
                     <div className="settings-section">
@@ -460,7 +464,7 @@ const UserPage = () => {
                     </div>
                 </div>
 
-                <Button icon={<RedoOutlined />} onClick={handleRefreshAllData} loading={combinedLoadingOverall} block style={{marginTop: 0}}>Refresh All Data</Button>
+                <Button icon={<RedoOutlined />} onClick={handleRefreshAllData} loading={combinedLoadingOverall} block style={{ marginTop: 0 }}>Refresh All Data</Button>
 
                 {/* --- PROFILE CARD --- */}
                 <UserProfileCard
@@ -473,15 +477,15 @@ const UserPage = () => {
                 />
 
                 <Divider className="user-page-divider"><Text className="divider-text">ACTIVITY & REFERRAL DETAILS</Text></Divider>
-                
+
                 {/* --- TABS --- */}
-                <Tabs activeKey={activeTabKey} items={tabItems} onChange={handleTabChange} centered className="dark-theme-tabs user-history-tabs" size={isMobile ? 'small' : 'middle'}/>
+                <Tabs activeKey={activeTabKey} items={tabItems} onChange={handleTabChange} centered className="dark-theme-tabs user-history-tabs" size={isMobile ? 'small' : 'middle'} />
 
                 {/* --- MODALS --- */}
 
                 {/* Unstake Modal */}
                 <Modal
-                    title={<Text className="modal-title-text">{selectedStakeForUnstake && unstakePrepDetails ? 'Confirm ARIX Unstake' : 'Select Stake to Unstake'}</Text>}
+                    title={<Text className="modal-title-text">{selectedStakeForUnstake && unstakePrepDetails ? 'Confirm OXYBLE Unstake' : 'Select Stake to Unstake'}</Text>}
                     open={isUnstakeModalVisible}
                     onOk={selectedStakeForUnstake && unstakePrepDetails ? handleConfirmUnstakeInModal : () => message.info("Select a stake.")}
                     onCancel={() => { setIsUnstakeModalVisible(false); setSelectedStakeForUnstake(null); setUnstakePrepDetails(null); setStakeToSelectForUnstakeId(undefined); setIsUnstakeActionLoading(false); }}
@@ -496,7 +500,7 @@ const UserPage = () => {
                         <div className="stake-selection-modal-content">
                             <Paragraph className="modal-text">Select active stake:</Paragraph>
                             <Select placeholder="Select stake" style={{ width: '100%', marginBottom: 20 }} onChange={handleModalUnstakeSelectionChange} value={stakeToSelectForUnstakeId} size="large" showSearch optionFilterProp="children">
-                                {activeUserStakes.map(s => (<Option key={s.id} value={s.id}>{s.planTitle} - {parseFloat(s.arixAmountStaked).toFixed(ARIX_DECIMALS)} ARIX (Unlocks: {new Date(s.unlockTimestamp).toLocaleDateString()})</Option>))}
+                                {activeUserStakes.map(s => (<Option key={s.id} value={s.id}>{s.planTitle} - {parseFloat(s.OXYBLEAmountStaked).toFixed(OXYBLE_DECIMALS)} OXYBLE (Unlocks: {new Date(s.unlockTimestamp).toLocaleDateString()})</Option>))}
                             </Select>
                             <Paragraph className="modal-text small-note">Unstake details will appear below.</Paragraph>
                         </div>
@@ -506,23 +510,23 @@ const UserPage = () => {
                             <Paragraph className="modal-text">{unstakePrepDetails.message}</Paragraph>
                             <Descriptions column={1} bordered size="small" className="modal-descriptions">
                                 <Descriptions.Item label="Plan">{selectedStakeForUnstake.planTitle}</Descriptions.Item>
-                                <Descriptions.Item label="ARIX Staked">{unstakePrepDetails.principalArix} ARIX</Descriptions.Item>
-                                {unstakePrepDetails.isEarly && <Descriptions.Item label="Early Penalty"><Text style={{color: '#F44336'}}>{unstakePrepDetails.arixPenaltyPercentApplied}% of principal</Text></Descriptions.Item>}
+                                <Descriptions.Item label="OXYBLE Staked">{unstakePrepDetails.principalOXYBLE} OXYBLE</Descriptions.Item>
+                                {unstakePrepDetails.isEarly && <Descriptions.Item label="Early Penalty"><Text style={{ color: '#F44336' }}>{unstakePrepDetails.OXYBLEPenaltyPercentApplied}% of principal</Text></Descriptions.Item>}
                             </Descriptions>
-                            <Alert message="Important Note" description="This unstakes ARIX principal. Accrued USDT rewards are separate." type="info" showIcon style={{marginTop: 16}} className="modal-alert"/>
+                            <Alert message="Important Note" description="This unstakes OXYBLE principal. Accrued USDT rewards are separate." type="info" showIcon style={{ marginTop: 16 }} className="modal-alert" />
                         </div>
                     ) : ((activeUserStakes.length === 1 && !unstakePrepDetails && isUnstakeActionLoading) || (selectedStakeForUnstake && !unstakePrepDetails && isUnstakeActionLoading)) ? (
-                        <div style={{textAlign: 'center', padding: '20px'}}><Spin tip="Loading unstake details..."/></div>
+                        <div style={{ textAlign: 'center', padding: '20px' }}><Spin tip="Loading unstake details..." /></div>
                     ) : null}
                 </Modal>
-                
+
                 {/* Top Up Modal */}
                 <Modal open={showTopUpModal} onCancel={() => setShowTopUpModal(false)} footer={null} className="push-topup-modal" centered>
                     <div className="push-topup-content">
                         <Button shape="circle" icon={<CloseOutlined />} className="close-push-modal-button" onClick={() => setShowTopUpModal(false)} />
-                        <div className="push-modal-header"><ArixPushIcon /><Text className="push-modal-title">Top Up Balance</Text></div>
-                        <Alert message="Send only ARIX to this address" type="warning" showIcon />
-                        <Paragraph className="address-label" style={{marginTop: '16px'}}>1. DEPOSIT ADDRESS</Paragraph>
+                        <div className="push-modal-header"><OXYBLEPushIcon /><Text className="push-modal-title">Top Up Balance</Text></div>
+                        <Alert message="Send only OXYBLE to this address" type="warning" showIcon />
+                        <Paragraph className="address-label" style={{ marginTop: '16px' }}>1. DEPOSIT ADDRESS</Paragraph>
                         <div className="address-display-box">
                             <Text className="deposit-address-text" ellipsis={{ tooltip: HOT_WALLET_ADDRESS }}>{HOT_WALLET_ADDRESS}</Text>
                             <Button icon={<CopyOutlined />} onClick={() => copyToClipboard(HOT_WALLET_ADDRESS)} />
@@ -540,18 +544,18 @@ const UserPage = () => {
                 <Modal open={showCashoutModal} onCancel={() => setShowCashoutModal(false)} footer={null} className="push-cashout-modal" centered>
                     <div className="push-cashout-content">
                         <Button shape="circle" icon={<CloseOutlined />} className="close-push-modal-button" onClick={() => setShowCashoutModal(false)} />
-                        <div className="push-modal-header"><ArixPushIcon /><Text className="push-modal-title">Cashout Balance</Text></div>
+                        <div className="push-modal-header"><OXYBLEPushIcon /><Text className="push-modal-title">Cashout Balance</Text></div>
                         <div className='cashout-balance-info'>
                             <Text>Available to withdraw:</Text>
-                            <Text strong>{loadingProfile ? <Spin size="small" /> : `${parseFloat(userProfile?.balance || 0).toFixed(2)} ARIX`}</Text>
+                            <Text strong>{loadingProfile ? <Spin size="small" /> : `${parseFloat(userProfile?.balance || 0).toFixed(2)} OXYBLE`}</Text>
                         </div>
                         <Form form={cashoutForm} onFinish={handleCashout} layout="vertical" disabled={cashoutLoading}>
-                            <Form.Item 
-                                name="amount" 
-                                label="Amount to Withdraw" 
+                            <Form.Item
+                                name="amount"
+                                label="Amount to Withdraw"
                                 rules={[
                                     { required: true, message: 'Please input an amount!' },
-                                    { 
+                                    {
                                         validator: (_, value) => {
                                             if (!value || parseFloat(value) <= 0) {
                                                 return Promise.reject(new Error('Amount must be positive'));
@@ -570,7 +574,7 @@ const UserPage = () => {
                                 <Input value={userFriendlyAddress} disabled />
                             </Form.Item>
                             <Form.Item>
-                                <Button type="primary" htmlType="submit" block loading={cashoutLoading}>Withdraw ARIX</Button>
+                                <Button type="primary" htmlType="submit" block loading={cashoutLoading}>Withdraw OXYBLE</Button>
                             </Form.Item>
                         </Form>
                     </div>

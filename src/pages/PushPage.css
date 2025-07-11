@@ -12,7 +12,7 @@
 }
 
 .push-page-container {
-    background: #000000;
+    background: #1C082E;
     min-height: calc(100vh - 56px - 60px);
     display: flex;
     flex-direction: column;
@@ -26,7 +26,7 @@
 }
 
 .header-content-wrapper {
-    background-color: var(--app-bg-dark-section);
+    background:inherit;
     width: 100%;
     max-width: 400px;
     padding: 10px 16px 16px 16px;
@@ -315,7 +315,7 @@
     transition: background-color 0.2s ease-out;
 }
 
-.push-page-arix-icon {
+.push-page-OXYBLE-icon {
     width: 24px;
     height: 24px;
     color: var(--app-primary-text-light);
@@ -550,8 +550,8 @@
     gap: 10px;
     margin-bottom: 20px;
 }
-.topup-modal-header .push-page-arix-icon,
-.cashout-modal-header .push-page-arix-icon {
+.topup-modal-header .push-page-OXYBLE-icon,
+.cashout-modal-header .push-page-OXYBLE-icon {
    color: var(--app-primary-text-light);
 }
 

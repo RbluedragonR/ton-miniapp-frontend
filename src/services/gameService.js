@@ -7,16 +7,16 @@ import api from './api';
 
 /**
  * Calls the backend to play a round of Coinflip.
- * @param {number} betAmountArix - The amount of ARIX to bet.
+ * @param {number} betAmountOXYBLE - The amount of OXYBLE to bet.
  * @param {string} choice - The user's choice, either 'heads' or 'tails'.
  * @returns {Promise<object>} The result of the game from the backend.
  */
-export const playCoinFlip = async (betAmountArix, choice) => {
+export const playCoinFlip = async (betAmountOXYBLE, choice) => {
     // This is your original implementation. It assumes the backend
     // identifies the user via a session or token, so userWalletAddress is not passed.
     // I am preserving this pattern.
     const response = await api.post('/game/coinflip', {
-        betAmountArix,
+        betAmountOXYBLE,
         choice
     });
     return response.data;
@@ -46,11 +46,11 @@ export const getCrashGameState = async () => {
 
 /**
  * Places a bet for the current user in the crash game.
- * @param {number} betAmountArix - The amount of ARIX to bet.
+ * @param {number} betAmountOXYBLE - The amount of OXYBLE to bet.
  * @returns {Promise<object>} The result of placing the bet.
  */
-export const placeCrashBet = async (betAmountArix) => {
-    const response = await api.post('/game/crash/bet', { betAmountArix });
+export const placeCrashBet = async (betAmountOXYBLE) => {
+    const response = await api.post('/game/crash/bet', { betAmountOXYBLE });
     return response.data;
 };
 

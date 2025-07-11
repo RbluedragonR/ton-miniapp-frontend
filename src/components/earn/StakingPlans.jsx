@@ -2,7 +2,7 @@
 import React from 'react';
 import { Card, Row, Col, Button, Statistic, Tooltip, Typography, Tag } from 'antd';
 import { InfoCircleOutlined, CheckCircleOutlined, PercentageOutlined, CalendarOutlined, DollarOutlined, SendOutlined } from '@ant-design/icons';
-import { ARIX_DECIMALS, USDT_DECIMALS } from '../../utils/constants';
+import { OXYBLE_DECIMALS, USDT_DECIMALS } from '../../utils/constants';
 
 const { Title: AntTitle, Text, Paragraph } = Typography;
 
@@ -18,7 +18,7 @@ const StakingPlans = ({ plans, onSelectPlan, currentArxPrice, userFriendlyAddres
                 <InfoCircleOutlined style={{ fontSize: '48px', color: '#7065F0', marginBottom: 20 }} />
                 <AntTitle level={4} style={{color: '#E0E0E5'}}>No Staking Plans Available</AntTitle>
                 <Paragraph style={{color: '#A0A0A5'}}>
-                    There are currently no active staking plans. Please check back later for new opportunities to earn with ARIX.
+                    There are currently no active staking plans. Please check back later for new opportunities to earn with OXYBLE.
                 </Paragraph>
             </Card>
         );
@@ -30,7 +30,7 @@ const StakingPlans = ({ plans, onSelectPlan, currentArxPrice, userFriendlyAddres
                 Choose Your Staking Plan
             </AntTitle>
             <Paragraph className="staking-plans-subtitle">
-                Stake your ARIX tokens based on a USDT value commitment and earn rewards in USDT, credited to your account monthly.
+                Stake your OXYBLE tokens based on a USDT value commitment and earn rewards in USDT, credited to your account monthly.
             </Paragraph>
             <Row gutter={[16, 24]} justify="center">
                 {plans.map((plan) => {
@@ -38,15 +38,15 @@ const StakingPlans = ({ plans, onSelectPlan, currentArxPrice, userFriendlyAddres
                     const maxStakeUsdtNum = parseFloat(plan.maxStakeUsdt || Infinity);
 
                     
-                    const minStakeArixApprox = currentArxPrice && minStakeUsdtNum > 0 && currentArxPrice > 0
+                    const minStakeOXYBLEApprox = currentArxPrice && minStakeUsdtNum > 0 && currentArxPrice > 0
                         ? (minStakeUsdtNum / currentArxPrice)
                         : null;
-                    const maxStakeArixApprox = currentArxPrice && maxStakeUsdtNum !== Infinity && currentArxPrice > 0
+                    const maxStakeOXYBLEApprox = currentArxPrice && maxStakeUsdtNum !== Infinity && currentArxPrice > 0
                         ? (maxStakeUsdtNum / currentArxPrice)
                         : null;
 
                     const displayUsdtApr = parseFloat(plan.fixedUsdtAprPercent || 0).toFixed(USDT_DECIMALS);
-                    const displayArixPenalty = parseFloat(plan.arixEarlyUnstakePenaltyPercent || 0).toFixed(2);
+                    const displayOXYBLEPenalty = parseFloat(plan.OXYBLEEarlyUnstakePenaltyPercent || 0).toFixed(2);
 
                     return (
                         <Col xs={24} sm={12} md={8} key={plan.key || plan.id} className="staking-plan-col">
@@ -62,7 +62,7 @@ const StakingPlans = ({ plans, onSelectPlan, currentArxPrice, userFriendlyAddres
                                         className="select-plan-button"
                                         disabled={!userFriendlyAddress}
                                     >
-                                        Select Plan & Stake ARIX
+                                        Select Plan & Stake OXYBLE
                                     </Button>,
                                 ]}
                             >
@@ -80,10 +80,10 @@ const StakingPlans = ({ plans, onSelectPlan, currentArxPrice, userFriendlyAddres
                                         ${minStakeUsdtNum.toFixed(USDT_DECIMALS)}
                                         {maxStakeUsdtNum !== Infinity ? ` - $${maxStakeUsdtNum.toFixed(USDT_DECIMALS)}` : '+'}
                                     </Text>
-                                    {minStakeArixApprox !== null && (
+                                    {minStakeOXYBLEApprox !== null && (
                                         <Text className="plan-stat-sub-value">
-                                            (Approx. {minStakeArixApprox.toFixed(2)}
-                                            {maxStakeArixApprox !== null ? ` - ${maxStakeArixApprox.toFixed(2)}` : '+'} ARIX)
+                                            (Approx. {minStakeOXYBLEApprox.toFixed(2)}
+                                            {maxStakeOXYBLEApprox !== null ? ` - ${maxStakeOXYBLEApprox.toFixed(2)}` : '+'} OXYBLE)
                                         </Text>
                                     )}
                                 </div>
@@ -96,11 +96,11 @@ const StakingPlans = ({ plans, onSelectPlan, currentArxPrice, userFriendlyAddres
 
                                 <div className="plan-stat-item">
                                     <Text className="plan-stat-label">
-                                        <Tooltip title="Penalty on ARIX principal if unstaked before term ends. USDT rewards are not affected by this.">
-                                            ARIX Early Unstake Penalty <InfoCircleOutlined className="info-icon"/>
+                                        <Tooltip title="Penalty on OXYBLE principal if unstaked before term ends. USDT rewards are not affected by this.">
+                                            OXYBLE Early Unstake Penalty <InfoCircleOutlined className="info-icon"/>
                                         </Tooltip>:
                                     </Text>
-                                    <Text className="plan-stat-value error-text">{displayArixPenalty}%</Text>
+                                    <Text className="plan-stat-value error-text">{displayOXYBLEPenalty}%</Text>
                                 </div>
 
                                 <div className="plan-referral-info">

@@ -2,8 +2,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { List, Card, Button, Typography, Spin, message, Modal, Input, Empty, Tag, Tooltip, Row, Col, Grid, Alert, Form } from 'antd';
 import { CheckCircleOutlined, ClockCircleOutlined, ExclamationCircleOutlined, LinkOutlined, SendOutlined, RedoOutlined, ArrowDownOutlined, ArrowUpOutlined, CopyOutlined, CloseOutlined } from '@ant-design/icons';
 import { useTonAddress, useTonConnectUI } from '@tonconnect/ui-react';
-import { getActiveTasks, submitTaskCompletion, getUserTaskHistory, getUserProfile, withdrawArix } from '../services/api';
-import { ARIX_DECIMALS } from '../utils/tonUtils';
+import { getActiveTasks, submitTaskCompletion, getUserTaskHistory, getUserProfile, withdrawOXYBLE } from '../services/api';
+import { OXYBLE_DECIMALS } from '../utils/tonUtils';
 import { useNavigate } from 'react-router-dom';
 import './TaskPage.css';
 
@@ -12,8 +12,8 @@ const { TextArea } = Input;
 const { useBreakpoint } = Grid;
 
 // --- REUSABLE MODAL COMPONENTS ---
-const ArixPushIcon = () => (
-    <img src="/img/arix-diamond.png" alt="ARIX" className="push-page-arix-icon" onError={(e) => { e.currentTarget.src = '/img/fallback-icon.png'; }} />
+const OXYBLEPushIcon = () => (
+    <img src="/img/OXYBLE-diamond.png" alt="OXYBLE" className="push-page-OXYBLE-icon" onError={(e) => { e.currentTarget.src = '/img/fallback-icon.png'; }} />
 );
 
 const HOT_WALLET_ADDRESS = import.meta.env.VITE_HOT_WALLET_ADDRESS;
@@ -187,7 +187,7 @@ const TaskPage = () => {
         }
         setCashoutLoading(true);
         try {
-            await withdrawArix({
+            await withdrawOXYBLE({
                 userWalletAddress: rawAddress,
                 amount: parseFloat(amount),
                 recipientAddress: userFriendlyAddress
@@ -240,7 +240,7 @@ const TaskPage = () => {
                 <Row justify="space-between" align="middle" style={{marginTop: 'auto', paddingTop: 12}}>
                     <Col>
                         <Text strong className="task-reward-text">
-                            Reward: {parseFloat(task.reward_arix_amount).toFixed(ARIX_DECIMALS)} ARIX
+                            Reward: {parseFloat(task.reward_OXYBLE_amount).toFixed(OXYBLE_DECIMALS)} OXYBLE
                         </Text>
                     </Col>
                     <Col>
@@ -288,7 +288,7 @@ const TaskPage = () => {
                     <Col xs={24} sm={8} style={{textAlign: isMobile ? 'left' : 'right', marginTop: isMobile ? 8 : 0}}>
                         {getHistoryStatusTag(item.status)}
                         <Text block className="reward-history-text" style={{ marginTop: 4}}>
-                            + {parseFloat(item.reward_arix_amount).toFixed(ARIX_DECIMALS)} ARIX
+                            + {parseFloat(item.reward_OXYBLE_amount).toFixed(OXYBLE_DECIMALS)} OXYBLE
                         </Text>
                     </Col>
                 </Row>
@@ -304,13 +304,15 @@ const TaskPage = () => {
                 <div className="balance-display-box">
                     <div className="balance-amount-line">
                         <div className="balance-icon-wrapper">
-                            <span className="balance-icon-representation">♢</span>
+                           
+                                <img src="/img/oxyble-balance.png" alt="oxyble-balance" />
+                           
                         </div>
                         <Text className="balance-amount-value">
                             {loadingTasks ? <Spin size="small"/> : parseFloat(profile?.balance || 0).toFixed(2)}
                         </Text>
                     </div>
-                    <Text className="balance-currency-label">ARIX In-App Balance</Text>
+                    <Text className="balance-currency-label">OXYBLE In-App Balance</Text>
                 </div>
                 <div className="topup-cashout-buttons">
                     <Button icon={<ArrowDownOutlined />} onClick={() => setShowTopUpModal(true)}>Top up</Button>
@@ -321,12 +323,12 @@ const TaskPage = () => {
                 </div>
             </div>
 
-            <Title level={2} className="task-page-title">ARIX Tasks</Title>
-
+            <Title level={2} className="task-page-title">OXYBLE Tasks</Title>
+{/* 
             {!userFriendlyAddress && !loadingTasks && (
                  <Alert
                     message="Connect Wallet to Participate"
-                    description="Please connect your TON wallet to view personalized task statuses, submit tasks, and claim ARIX rewards."
+                    description="Please connect your TON wallet to view personalized task statuses, submit tasks, and claim OXYBLE rewards."
                     type="info"
                     showIcon
                     style={{marginBottom: 24, marginLeft: isMobile ? 0 : 0, marginRight: isMobile ? 0: 0}}
@@ -336,7 +338,10 @@ const TaskPage = () => {
                         </Button>
                     }
                 />
-            )}
+            )} */}
+            <div style={{ width: '100%', display: 'flex', justifyContent: 'center', padding: 5 }}>
+                <img style={{width: '100%'}} src="/img/world-map.svg" alt="world-map" />
+            </div>
 
             <div style={{textAlign:'right', marginBottom: loadingTasks && tasks.length === 0 ? 0 : 20, paddingRight: isMobile? 0:0 }}>
                 <Button icon={<RedoOutlined/>} onClick={handleRefreshAll} loading={loadingTasks || loadingHistory}>Refresh Tasks</Button>
@@ -384,7 +389,7 @@ const TaskPage = () => {
                 {selectedTask && (
                     <>
                         <Paragraph className="task-modal-text">{selectedTask.description}</Paragraph>
-                        <Paragraph strong className="task-modal-reward">Reward: {parseFloat(selectedTask.reward_arix_amount).toFixed(ARIX_DECIMALS)} ARIX</Paragraph>
+                        <Paragraph strong className="task-modal-reward">Reward: {parseFloat(selectedTask.reward_OXYBLE_amount).toFixed(OXYBLE_DECIMALS)} OXYBLE</Paragraph>
 
                         {selectedTask.validation_type === 'link_submission' && (
                             <Input
@@ -433,10 +438,10 @@ const TaskPage = () => {
                         onClick={() => setShowTopUpModal(false)} 
                     />
                     <div className="topup-modal-header">
-                        <ArixPushIcon />
+                        <OXYBLEPushIcon />
                         <Text className="topup-modal-title">Top Up Balance</Text>
                     </div>
-                    <Alert message="Send only ARIX to this address" type="warning" showIcon />
+                    <Alert message="Send only OXYBLE to this address" type="warning" showIcon />
                     <Paragraph className="address-label" style={{marginTop: '16px'}}>
                         1. DEPOSIT ADDRESS
                     </Paragraph>
@@ -492,13 +497,13 @@ const TaskPage = () => {
                         onClick={() => setShowCashoutModal(false)} 
                     />
                     <div className="cashout-modal-header">
-                        <ArixPushIcon />
+                        <OXYBLEPushIcon />
                         <Text className="cashout-modal-title">Cashout Balance</Text>
                     </div>
                     <div className='cashout-balance-info'>
                         <Text>Available to withdraw:</Text>
                         <Text strong>
-                            {loadingTasks ? <Spin size="small" /> : `${parseFloat(profile?.balance || 0).toFixed(2)} ARIX`}
+                            {loadingTasks ? <Spin size="small" /> : `${parseFloat(profile?.balance || 0).toFixed(2)} OXYBLE`}
                         </Text>
                     </div>
                     <Form 
@@ -534,7 +539,7 @@ const TaskPage = () => {
                                 block 
                                 loading={cashoutLoading}
                             >
-                                Withdraw ARIX
+                                Withdraw OXYBLE
                             </Button>
                         </Form.Item>
                     </Form>

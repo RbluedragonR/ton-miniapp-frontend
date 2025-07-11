@@ -3,7 +3,7 @@
  *
  * This is the fully merged and consolidated API service file.
  * It combines all of your existing endpoints with the ones that
- * were missing, such as `withdrawArix`, fixing the Vercel build error.
+ * were missing, such as `withdrawOXYBLE`, fixing the Vercel build error.
  */
 
 import axios from 'axios';
@@ -60,9 +60,9 @@ export const getUserTransactions = (walletAddress) => {
  * [NEWLY ADDED] Function to call the backend withdrawal endpoint.
  * This function was missing, causing the Vercel build to fail.
  */
-export const withdrawArix = async (withdrawalData) => {
+export const withdrawOXYBLE = async (withdrawalData) => {
   try {
-    const response = await apiClient.post('/user/withdraw/arix', withdrawalData);
+    const response = await apiClient.post('/user/withdraw/OXYBLE', withdrawalData);
     return response.data;
   } catch (error) {
     // The interceptor already logs the error, but we re-throw it
@@ -75,20 +75,20 @@ export const withdrawArix = async (withdrawalData) => {
 // --- Earn & Staking Endpoints ---
 export const getStakingConfig = () => apiClient.get('/earn/config');
 export const recordUserStake = (data) => apiClient.post('/earn/stake', data);
-export const initiateArixUnstake = (data) => apiClient.post('/earn/initiate-arix-unstake', data);
-export const confirmArixUnstake = (data) => apiClient.post('/earn/confirm-arix-unstake', data);
+export const initiateOXYBLEUnstake = (data) => apiClient.post('/earn/initiate-OXYBLE-unstake', data);
+export const confirmOXYBLEUnstake = (data) => apiClient.post('/earn/confirm-OXYBLE-unstake', data);
 export const getUserStakesAndRewards = (walletAddress) => apiClient.get(`/earn/stakes/${walletAddress}`);
 export const requestUsdtWithdrawal = (data) => apiClient.post('/earn/request-usdt-withdrawal', data);
-export const requestArixRewardWithdrawal = (data) => apiClient.post('/earn/request-arix-withdrawal', data);
+export const requestOXYBLERewardWithdrawal = (data) => apiClient.post('/earn/request-OXYBLE-withdrawal', data);
 
 /**
- * [NEWLY ADDED] Function to get the ARIX price.
+ * [NEWLY ADDED] Function to get the OXYBLE price.
  * This was causing a 404 error in your frontend logs. This function points to the correct backend route.
  */
-export const getArixPrice = () => {
-    // Assuming the correct route is `/price/arix` on the backend based on best practices.
+export const getOXYBLEPrice = () => {
+    // Assuming the correct route is `/price/OXYBLE` on the backend based on best practices.
     // If not, this path might need to be adjusted to match your backend price routes.
-    return apiClient.get('/price/arix');
+    return apiClient.get('/price/OXYBLE');
 };
 
 
