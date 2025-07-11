@@ -267,40 +267,40 @@ const UserPage = () => {
     // --- RENDER LOGIC ---
     const combinedLoadingOverall = loadingProfile || loadingReferral || loadingProgramDetails || loadingStakes || loadingGames;
 
-    if (!userFriendlyAddress && !combinedLoadingOverall) {
-        return (
-            <div className="user-page-container">
-                <div className="page-header-section">
-                    <div className="balance-display-box">
-                        <div className="balance-amount-line">
-                            <div className="balance-icon-wrapper">
-                                <img src="/img/oxyble-balance.png" alt="oxyble-balance" />
-                            </div>
-                            <Text className="balance-amount-value"><Spin size="small" wrapperClassName="balance-spin" /></Text>
-                        </div>
-                        <Text className="balance-currency-label">OXYBLE In-App Balance</Text>
-                    </div>
-                    <div className="topup-cashout-buttons">
-                        <Button icon={<ArrowDownOutlined />} disabled>Top up</Button>
-                        <Button icon={<ArrowUpOutlined />} disabled>Cashout</Button>
-                    </div>
-                    <div className="page-banner" onClick={() => navigate('/game')}>
-                        <Text className="page-banner-text">X2 or maybe x256? Play Coinflip and try your luck! →</Text>
-                    </div>
-                </div>
-                <Card className="connect-wallet-prompt">
-                    <WalletOutlined className="connect-wallet-icon" />
-                    <Title level={4} className="connect-wallet-title">Connect Your Wallet</Title>
-                    <Paragraph className="connect-wallet-text">
-                        Connect your TON wallet for dashboard, settings, referrals, and activity.
-                    </Paragraph>
-                    <Button type="primary" size="large" onClick={() => tonConnectUI.openModal()} icon={<LinkOutlined />}>
-                        Connect Wallet
-                    </Button>
-                </Card>
-            </div>
-        );
-    }
+    // if (!userFriendlyAddress && !combinedLoadingOverall) {
+    //     return (
+    //         <div className="user-page-container">
+    //             <div className="page-header-section">
+    //                 <div className="balance-display-box">
+    //                     <div className="balance-amount-line">
+    //                         <div className="balance-icon-wrapper">
+    //                             <img src="/img/oxyble-balance.png" alt="oxyble-balance" />
+    //                         </div>
+    //                         <Text className="balance-amount-value"><Spin size="small" wrapperClassName="balance-spin" /></Text>
+    //                     </div>
+    //                     <Text className="balance-currency-label">OXYBLE In-App Balance</Text>
+    //                 </div>
+    //                 <div className="topup-cashout-buttons">
+    //                     <Button icon={<ArrowDownOutlined />} disabled>Top up</Button>
+    //                     <Button icon={<ArrowUpOutlined />} disabled>Cashout</Button>
+    //                 </div>
+    //                 <div className="page-banner" onClick={() => navigate('/game')}>
+    //                     <Text className="page-banner-text">X2 or maybe x256? Play Coinflip and try your luck! →</Text>
+    //                 </div>
+    //             </div>
+    //             <Card className="connect-wallet-prompt">
+    //                 <WalletOutlined className="connect-wallet-icon" />
+    //                 <Title level={4} className="connect-wallet-title">Connect Your Wallet</Title>
+    //                 <Paragraph className="connect-wallet-text">
+    //                     Connect your TON wallet for dashboard, settings, referrals, and activity.
+    //                 </Paragraph>
+    //                 <Button type="primary" size="large" onClick={() => tonConnectUI.openModal()} icon={<LinkOutlined />}>
+    //                     Connect Wallet
+    //                 </Button>
+    //             </Card>
+    //         </div>
+    //     );
+    // }
 
     const referralLinkToDisplay = referralData?.referralLink || (referralData?.referralCode ? `${REFERRAL_LINK_BASE}?ref=${referralData.referralCode}` : (rawAddress ? `${REFERRAL_LINK_BASE}?ref=${rawAddress}` : ''));
     const referralCodeForBoxes = (referralData?.referralCode || rawAddress || "--------").slice(-8).toUpperCase();
