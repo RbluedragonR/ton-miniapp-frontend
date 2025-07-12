@@ -129,8 +129,8 @@ function App() {
             const tg = window.Telegram.WebApp;
             tg.ready();
             tg.expand();
-            tg.setHeaderColor('#1C082E');
-            tg.setBackgroundColor('#1C082E');
+            tg.setHeaderColor('#111215');
+            tg.setBackgroundColor('#000000');
         }
     }, [setOptions]);
 
@@ -165,7 +165,7 @@ function App() {
     const APP_BG_DARK_ELEMENT = '#08090A';
     const APP_BG_DARK_SECTION = '#111215';
     const APP_BG_DARK_CONTAINER = '#1C1C1E';
-    const APP_MAIN_BG = '#1C082E';
+    const APP_MAIN_BG = '#000000';
     const APP_BORDER_COLOR = '#2D3142';
     const APP_BUTTON_PRIMARY_BG = '#A3AECF'; 
     const APP_BUTTON_PRIMARY_TEXT = '#08090A'; 

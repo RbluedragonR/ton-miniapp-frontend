@@ -12,7 +12,7 @@
 }
 
 .push-page-container {
-    background: #1C082E;
+    background: #000000;
     min-height: calc(100vh - 56px - 60px);
     display: flex;
     flex-direction: column;

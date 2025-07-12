@@ -136,7 +136,7 @@ const TaskPage = () => {
             window.open(task.action_url, '_blank');
             setIsSubmissionModalVisible(true);
         } else {
-             setIsSubmissionModalVisible(true);
+            setIsSubmissionModalVisible(true);
         }
     };
 
@@ -145,7 +145,7 @@ const TaskPage = () => {
 
         setSubmitLoading(true);
         const loadingMessageKey = 'taskSubmit';
-        message.loading({ content: `Submitting task '${selectedTask.title}'...`, key: loadingMessageKey, duration: 0});
+        message.loading({ content: `Submitting task '${selectedTask.title}'...`, key: loadingMessageKey, duration: 0 });
 
         let submissionPayload = {};
         if (selectedTask.validation_type === 'link_submission') {
@@ -156,7 +156,7 @@ const TaskPage = () => {
             }
             submissionPayload = { link: submissionInput };
         } else if (selectedTask.validation_type === 'text_submission') {
-             submissionPayload = { text: submissionInput };
+            submissionPayload = { text: submissionInput };
         }
 
         try {
@@ -230,14 +230,14 @@ const TaskPage = () => {
         <List.Item className="task-list-item">
             <Card
                 className="dark-theme-card"
-                title={<Text className="text-primary-light" style={{fontWeight: '600', fontSize:'1.05rem'}}>{task.title}</Text>}
+                title={<Text className="text-primary-light" style={{ fontWeight: '600', fontSize: '1.05rem' }}>{task.title}</Text>}
                 extra={getTaskStatusTag(task)}
-                style={{height: '100%', display: 'flex', flexDirection: 'column'}}
+                style={{ height: '100%', display: 'flex', flexDirection: 'column' }}
             >
-                <div style={{flexGrow: 1}}>
+                <div style={{ flexGrow: 1 }}>
                     <Paragraph className="task-description">{task.description}</Paragraph>
                 </div>
-                <Row justify="space-between" align="middle" style={{marginTop: 'auto', paddingTop: 12}}>
+                <Row justify="space-between" align="middle" style={{ marginTop: 'auto', paddingTop: 12 }}>
                     <Col>
                         <Text strong className="task-reward-text">
                             Reward: {parseFloat(task.reward_OXYBLE_amount).toFixed(OXYBLE_DECIMALS)} OXYBLE
@@ -254,8 +254,8 @@ const TaskPage = () => {
                                 size="middle"
                             >
                                 {task.validation_type === 'auto_approve' && !task.action_url ? 'Claim' :
-                                (task.action_url && (task.validation_type === 'auto_approve' || !task.validation_type.includes('submission')) ? 'Visit & Claim' :
-                                (task.action_url ? 'Go to Task' : 'Submit Proof'))}
+                                    (task.action_url && (task.validation_type === 'auto_approve' || !task.validation_type.includes('submission')) ? 'Visit & Claim' :
+                                        (task.action_url ? 'Go to Task' : 'Submit Proof'))}
                             </Button>
                         ) : (
                             <Button disabled type="dashed" size="middle" className="task-disabled-button">
@@ -264,35 +264,35 @@ const TaskPage = () => {
                         )}
                     </Col>
                 </Row>
-                 {task.action_url && task.can_attempt && task.validation_type !== 'auto_approve' && (
-                     <Text className="task-sub-note">
-                         Perform action at link, then confirm or submit proof.
-                     </Text>
-                 )}
+                {task.action_url && task.can_attempt && task.validation_type !== 'auto_approve' && (
+                    <Text className="task-sub-note">
+                        Perform action at link, then confirm or submit proof.
+                    </Text>
+                )}
             </Card>
         </List.Item>
     );
 
     const renderHistoryItem = (item) => (
         <List.Item className="history-list-item">
-             <Card size="small" className="dark-theme-card">
-                <Row justify="space-between" align="top" gutter={[8,4]}>
+            <Card size="small" className="dark-theme-card">
+                <Row justify="space-between" align="top" gutter={[8, 4]}>
                     <Col xs={24} sm={16}>
                         <Text strong className="task-title-history">{item.title}</Text>
                         <Paragraph className="submission-date">
                             Submitted: {new Date(item.completed_at).toLocaleString()}
                         </Paragraph>
-                        {item.submission_data?.link && <Text className="submission-details-text">Link: <a href={item.submission_data.link} target="_blank" rel="noopener noreferrer">{item.submission_data.link.substring(0,isMobile? 25 : 40)}...</a></Text>}
-                        {item.submission_data?.text && <Text className="submission-details-text">Details: {item.submission_data.text.substring(0,isMobile ? 30 : 50)}...</Text>}
+                        {item.submission_data?.link && <Text className="submission-details-text">Link: <a href={item.submission_data.link} target="_blank" rel="noopener noreferrer">{item.submission_data.link.substring(0, isMobile ? 25 : 40)}...</a></Text>}
+                        {item.submission_data?.text && <Text className="submission-details-text">Details: {item.submission_data.text.substring(0, isMobile ? 30 : 50)}...</Text>}
                     </Col>
-                    <Col xs={24} sm={8} style={{textAlign: isMobile ? 'left' : 'right', marginTop: isMobile ? 8 : 0}}>
+                    <Col xs={24} sm={8} style={{ textAlign: isMobile ? 'left' : 'right', marginTop: isMobile ? 8 : 0 }}>
                         {getHistoryStatusTag(item.status)}
-                        <Text block className="reward-history-text" style={{ marginTop: 4}}>
+                        <Text block className="reward-history-text" style={{ marginTop: 4 }}>
                             + {parseFloat(item.reward_OXYBLE_amount).toFixed(OXYBLE_DECIMALS)} OXYBLE
                         </Text>
                     </Col>
                 </Row>
-                {item.notes && <Paragraph className="notes-history-text" style={{ marginTop: 5}}>Note: {item.notes}</Paragraph>}
+                {item.notes && <Paragraph className="notes-history-text" style={{ marginTop: 5 }}>Note: {item.notes}</Paragraph>}
             </Card>
         </List.Item>
     );
@@ -301,30 +301,17 @@ const TaskPage = () => {
         <div className="task-page-container">
             {/* HEADER SECTION */}
             <div className="page-header-section">
-                <div className="balance-display-box">
-                    <div className="balance-amount-line">
-                        <div className="balance-icon-wrapper">
-                           
-                                <img src="/img/oxyble-balance.png" alt="oxyble-balance" />
-                           
-                        </div>
-                        <Text className="balance-amount-value">
-                            {loadingTasks ? <Spin size="small"/> : parseFloat(profile?.balance || 0).toFixed(2)}
-                        </Text>
-                    </div>
-                    <Text className="balance-currency-label">OXYBLE In-App Balance</Text>
+                <div style={{ width: '100%', display: 'flex', justifyContent: 'center', padding: 5 }}>
+                    <img style={{ width: '100%' }} src="/img/world-map.svg" alt="world-map" />
                 </div>
-                <div className="topup-cashout-buttons">
-                    <Button icon={<ArrowDownOutlined />} onClick={() => setShowTopUpModal(true)}>Top up</Button>
-                    <Button icon={<ArrowUpOutlined />} onClick={() => setShowCashoutModal(true)}>Cashout</Button>
-                </div>
+
                 <div className="page-banner" onClick={() => navigate('/game')}>
                     <Text className="page-banner-text">X2 or maybe x256? Play Coinflip and try your luck! →</Text>
                 </div>
             </div>
 
             <Title level={2} className="task-page-title">OXYBLE Tasks</Title>
-{/* 
+            {/* 
             {!userFriendlyAddress && !loadingTasks && (
                  <Alert
                     message="Connect Wallet to Participate"
@@ -339,39 +326,55 @@ const TaskPage = () => {
                     }
                 />
             )} */}
-            <div style={{ width: '100%', display: 'flex', justifyContent: 'center', padding: 5 }}>
-                <img style={{width: '100%'}} src="/img/world-map.svg" alt="world-map" />
-            </div>
+            <div className="page-header-section">
+                <div className="balance-display-box">
+                    <div className="balance-amount-line">
+                        <div className="balance-icon-wrapper">
 
-            <div style={{textAlign:'right', marginBottom: loadingTasks && tasks.length === 0 ? 0 : 20, paddingRight: isMobile? 0:0 }}>
-                <Button icon={<RedoOutlined/>} onClick={handleRefreshAll} loading={loadingTasks || loadingHistory}>Refresh Tasks</Button>
-            </div>
+                            <img src="/img/oxyble-balance.png" alt="oxyble-balance" />
 
+                        </div>
+                        <Text className="balance-amount-value">
+                            {loadingTasks ? <Spin size="small" /> : parseFloat(profile?.balance || 0).toFixed(2)}
+                        </Text>
+                    </div>
+                    <Text className="balance-currency-label">OXYBLE In-App Balance</Text>
+                </div>
+                <div className="topup-cashout-buttons">
+                    <Button icon={<ArrowDownOutlined />} onClick={() => setShowTopUpModal(true)}>Top up</Button>
+                    <Button icon={<ArrowUpOutlined />} onClick={() => setShowCashoutModal(true)}>Cashout</Button>
+                </div>
+
+                <div style={{ textAlign: 'right', marginBottom: loadingTasks && tasks.length === 0 ? 0 : 20, paddingRight: isMobile ? 0 : 0 }}>
+                    <Button icon={<RedoOutlined />} onClick={handleRefreshAll} loading={loadingTasks || loadingHistory}>Refresh Tasks</Button>
+                </div>
+
+            </div>
             {loadingTasks && tasks.length === 0 ? (
                 <div style={{ textAlign: 'center', padding: 50 }}><Spin size="large" tip="Loading Available Tasks..." /></div>
             ) : tasks.length > 0 ? (
                 <List
-                    grid={{ gutter: isMobile ? 16 : 24, xs: 1, sm: 1, md: 2, lg:2, xl:3 }}
+                    grid={{ gutter: isMobile ? 16 : 24, xs: 1, sm: 1, md: 2, lg: 2, xl: 3 }}
                     dataSource={tasks}
                     renderItem={renderTaskItem}
-                    style={{padding: isMobile? '0' : '0'}}
+                    style={{ padding: isMobile ? '0' : '0' }}
                 />
             ) : (
-                !loadingTasks && <Card className="dark-theme-card" style={{textAlign:'center', padding: '30px', margin: isMobile ? '0' : '0'}}><Empty description={<Text className="text-secondary-light">No active tasks available. Check back soon!</Text>} /></Card>
+                !loadingTasks && <Card className="dark-theme-card" style={{ textAlign: 'center', padding: '30px', margin: isMobile ? '0' : '0' }}><Empty description={<Text className="text-secondary-light">No active tasks available. Check back soon!</Text>} /></Card>
             )}
 
             {userFriendlyAddress && (userTaskHistory.length > 0 || loadingHistory) && (
-                <div style={{marginTop: 40, padding: isMobile? '0' : '0'}}>
-                    <Title level={3} className="section-title" style={{textAlign: 'center', marginBottom: 24}}>Your Task History</Title>
+                <div style={{ marginTop: 40, padding: isMobile ? '0' : '0' }}>
+                    <Title level={3} className="section-title" style={{ textAlign: 'center', marginBottom: 24 }}>Your Task History</Title>
                     {loadingHistory ? (
                         <div style={{ textAlign: 'center', padding: 30 }}><Spin tip="Loading your history..." /></div>
                     ) : userTaskHistory.length > 0 ? (
-                         <List
+                        <List
                             dataSource={userTaskHistory}
                             renderItem={renderHistoryItem}
                         />
                     ) : (
-                        <Card className="dark-theme-card" style={{textAlign:'center', padding: '20px'}}><Empty description={<Text className="text-secondary-light">You haven't completed any tasks yet.</Text>} /></Card>
+                        <Card className="dark-theme-card" style={{ textAlign: 'center', padding: '20px' }}><Empty description={<Text className="text-secondary-light">You haven't completed any tasks yet.</Text>} /></Card>
                     )}
                 </div>
             )}
@@ -397,7 +400,7 @@ const TaskPage = () => {
                                 placeholder="Paste your submission link here (e.g., post URL)"
                                 value={submissionInput}
                                 onChange={(e) => setSubmissionInput(e.target.value)}
-                                style={{marginTop: 12}}
+                                style={{ marginTop: 12 }}
                             />
                         )}
                         {selectedTask.validation_type === 'text_submission' && (
@@ -406,95 +409,95 @@ const TaskPage = () => {
                                 placeholder="Enter your submission details here"
                                 value={submissionInput}
                                 onChange={(e) => setSubmissionInput(e.target.value)}
-                                style={{marginTop: 12}}
+                                style={{ marginTop: 12 }}
                             />
                         )}
                         {(selectedTask.validation_type === 'auto_approve' || (selectedTask.action_url && !(selectedTask.validation_type === 'link_submission' || selectedTask.validation_type === 'text_submission'))) && (
-                             <Paragraph className="task-modal-text" style={{marginTop:12, fontSize:'0.9rem', opacity:0.7}}>
+                            <Paragraph className="task-modal-text" style={{ marginTop: 12, fontSize: '0.9rem', opacity: 0.7 }}>
                                 {selectedTask.action_url ?
-                                 `Please ensure you have completed the action at the provided link.` :
-                                 `This task will be automatically processed.`}
+                                    `Please ensure you have completed the action at the provided link.` :
+                                    `This task will be automatically processed.`}
                                 {selectedTask.action_url && <div className="task-modal-url"><Text className="text-secondary-light">Task URL:</Text> <a href={selectedTask.action_url} target="_blank" rel="noopener noreferrer"> {selectedTask.action_url}</a></div>}
-                                <br/>Click "Submit" to confirm your completion.
-                             </Paragraph>
+                                <br />Click "Submit" to confirm your completion.
+                            </Paragraph>
                         )}
                     </>
                 )}
             </Modal>
 
             {/* TOP UP MODAL */}
-            <Modal 
-                open={showTopUpModal} 
-                onCancel={() => setShowTopUpModal(false)} 
-                footer={null} 
-                className="push-topup-modal" 
+            <Modal
+                open={showTopUpModal}
+                onCancel={() => setShowTopUpModal(false)}
+                footer={null}
+                className="push-topup-modal"
                 centered
             >
                 <div className="push-topup-content">
-                    <Button 
-                        shape="circle" 
-                        icon={<CloseOutlined />} 
-                        className="close-topup-button" 
-                        onClick={() => setShowTopUpModal(false)} 
+                    <Button
+                        shape="circle"
+                        icon={<CloseOutlined />}
+                        className="close-topup-button"
+                        onClick={() => setShowTopUpModal(false)}
                     />
                     <div className="topup-modal-header">
                         <OXYBLEPushIcon />
                         <Text className="topup-modal-title">Top Up Balance</Text>
                     </div>
                     <Alert message="Send only OXYBLE to this address" type="warning" showIcon />
-                    <Paragraph className="address-label" style={{marginTop: '16px'}}>
+                    <Paragraph className="address-label" style={{ marginTop: '16px' }}>
                         1. DEPOSIT ADDRESS
                     </Paragraph>
                     <div className="address-display-box">
-                        <Text 
-                            className="deposit-address-text" 
+                        <Text
+                            className="deposit-address-text"
                             ellipsis={{ tooltip: HOT_WALLET_ADDRESS }}
                         >
                             {HOT_WALLET_ADDRESS}
                         </Text>
-                        <Button 
-                            icon={<CopyOutlined />} 
-                            onClick={() => copyToClipboard(HOT_WALLET_ADDRESS)} 
+                        <Button
+                            icon={<CopyOutlined />}
+                            onClick={() => copyToClipboard(HOT_WALLET_ADDRESS)}
                         />
                     </div>
                     <Paragraph className="address-label" style={{ marginTop: '16px' }}>
                         2. REQUIRED MEMO / COMMENT
                     </Paragraph>
-                    <Alert 
-                        message="YOUR WALLET ADDRESS IS THE MEMO" 
-                        description="You MUST put your personal wallet address in the transaction's memo/comment field to be credited." 
-                        type="error" 
-                        showIcon 
+                    <Alert
+                        message="YOUR WALLET ADDRESS IS THE MEMO"
+                        description="You MUST put your personal wallet address in the transaction's memo/comment field to be credited."
+                        type="error"
+                        showIcon
                     />
                     <div className="address-display-box">
-                        <Text 
-                            className="deposit-address-text" 
+                        <Text
+                            className="deposit-address-text"
                             ellipsis={{ tooltip: userFriendlyAddress }}
                         >
                             {userFriendlyAddress || "Connect wallet to see your address"}
                         </Text>
-                        <Button 
-                            icon={<CopyOutlined />} 
-                            onClick={() => copyToClipboard(userFriendlyAddress)} 
+                        <Button
+                            icon={<CopyOutlined />}
+                            onClick={() => copyToClipboard(userFriendlyAddress)}
                         />
                     </div>
                 </div>
             </Modal>
 
             {/* CASHOUT MODAL */}
-            <Modal 
-                open={showCashoutModal} 
-                onCancel={() => setShowCashoutModal(false)} 
-                footer={null} 
-                className="push-cashout-modal" 
+            <Modal
+                open={showCashoutModal}
+                onCancel={() => setShowCashoutModal(false)}
+                footer={null}
+                className="push-cashout-modal"
                 centered
             >
                 <div className="push-cashout-content">
-                    <Button 
-                        shape="circle" 
-                        icon={<CloseOutlined />} 
-                        className="close-cashout-button" 
-                        onClick={() => setShowCashoutModal(false)} 
+                    <Button
+                        shape="circle"
+                        icon={<CloseOutlined />}
+                        className="close-cashout-button"
+                        onClick={() => setShowCashoutModal(false)}
                     />
                     <div className="cashout-modal-header">
                         <OXYBLEPushIcon />
@@ -506,24 +509,24 @@ const TaskPage = () => {
                             {loadingTasks ? <Spin size="small" /> : `${parseFloat(profile?.balance || 0).toFixed(2)} OXYBLE`}
                         </Text>
                     </div>
-                    <Form 
-                        form={cashoutForm} 
-                        onFinish={handleCashout} 
-                        layout="vertical" 
+                    <Form
+                        form={cashoutForm}
+                        onFinish={handleCashout}
+                        layout="vertical"
                         disabled={cashoutLoading}
                     >
-                        <Form.Item 
-                            name="amount" 
-                            label="Amount to Withdraw" 
+                        <Form.Item
+                            name="amount"
+                            label="Amount to Withdraw"
                             rules={[
-                                { required: true, message: 'Please input an amount!' }, 
-                                { 
-                                    validator: (_, value) => 
-                                        (!value || parseFloat(value) <= 0) ? 
-                                        Promise.reject(new Error('Amount must be positive')) : 
-                                        (profile && parseFloat(value) > parseFloat(profile.balance)) ? 
-                                        Promise.reject(new Error('Amount exceeds balance')) : 
-                                        Promise.resolve() 
+                                { required: true, message: 'Please input an amount!' },
+                                {
+                                    validator: (_, value) =>
+                                        (!value || parseFloat(value) <= 0) ?
+                                            Promise.reject(new Error('Amount must be positive')) :
+                                            (profile && parseFloat(value) > parseFloat(profile.balance)) ?
+                                                Promise.reject(new Error('Amount exceeds balance')) :
+                                                Promise.resolve()
                                 }
                             ]}
                         >
@@ -533,10 +536,10 @@ const TaskPage = () => {
                             <Input value={userFriendlyAddress} disabled />
                         </Form.Item>
                         <Form.Item>
-                            <Button 
-                                type="primary" 
-                                htmlType="submit" 
-                                block 
+                            <Button
+                                type="primary"
+                                htmlType="submit"
+                                block
                                 loading={cashoutLoading}
                             >
                                 Withdraw OXYBLE

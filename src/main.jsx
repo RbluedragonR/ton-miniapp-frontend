@@ -8,7 +8,7 @@ import './index.css';
 const manifestUrl = new URL('tonconnect-manifest.json', window.location.origin).toString();
 
 // Your original bot username is correct.
-const telegramBotUsername = 'OXYBLE_terminal_tma_bot'; 
+const telegramBotUsername = 'OXYBLE_bot'; 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

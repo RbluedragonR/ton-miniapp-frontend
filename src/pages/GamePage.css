@@ -1,14 +1,14 @@
 :root {
     --app-primary-text-light: #ffffff;
     --app-bg-dark-element: #08090A;
-    --app-bg-dark-section: #1C082;
+    --app-bg-dark-section: #111215;
     --app-bg-dark-container: #1C1C1E;
     --app-banner-bg: #121800;
     --app-button-primary-hover-bg: #8D9AC3;
 }
 
 .game-page-container {
-    background-color: #1C082E;
+    background-color: #000000;
     min-height: calc(100vh - 56px - 60px);
     padding: 0 16px 24px 16px;
     box-sizing: border-box;
@@ -215,7 +215,7 @@
     justify-content: center;
     align-items: flex-start;
     text-align: left;
-    background: linear-gradient(10deg, #DD3293 0%, #612D91 100%);
+    /*background: linear-gradient(10deg, #DD3293 0%, #612D91 100%);*/
 
 }
 
