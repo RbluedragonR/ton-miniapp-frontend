@@ -77,7 +77,6 @@ const UserPage = () => {
     // UI/Interaction State
     const [activeTabKey, setActiveTabKey] = useState('referral_stats');
     const [language, setLanguage] = useState('en');
-    const [colorTheme, setColorTheme] = useState('terminal');
     const [sound, setSound] = useState('on');
 
     // Unstake Modal State
@@ -446,13 +445,6 @@ const UserPage = () => {
                             <Radio.Button value="en">English</Radio.Button>
                             <Radio.Button value="ru">Русский</Radio.Button>
                             <Radio.Button value="ua">Українська</Radio.Button>
-                        </Radio.Group>
-                    </div>
-                    <div className="settings-section">
-                        <Title level={5} className="settings-section-title">Color Theme</Title>
-                        <Radio.Group value={colorTheme} onChange={(e) => setColorTheme(e.target.value)} buttonStyle="solid" className="settings-segmented-control">
-                            <Radio.Button value="terminal">Terminal</Radio.Button>
-                            <Radio.Button value="telegram">Telegram</Radio.Button>
                         </Radio.Group>
                     </div>
                     <div className="settings-section">
