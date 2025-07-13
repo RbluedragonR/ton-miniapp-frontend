@@ -1,7 +1,7 @@
 // AR_FRONTEND/src/App.jsx
 import React, { useEffect, Suspense, lazy, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
-import { TonConnectButton, TonConnectUIProvider, useTonConnectUI, useTonWallet } from '@tonconnect/ui-react';
+import { TonConnectUIProvider, useTonConnectUI, useTonWallet } from '@tonconnect/ui-react';
 import { Layout, Menu, ConfigProvider, theme as antdTheme, Typography, Grid, Spin, Button, Dropdown } from 'antd';
 import {
     CheckSquareFilled,
@@ -16,6 +16,10 @@ import {
 } from '@ant-design/icons';
 import './App.css';
 import ResponsiveMobileNav from './components/ResponsiveMobileNav';
+import TelegramStars from './components/TelegramStars';
+import TelegramStarsBalance from './components/TelegramStarsBalance';
+import TelegramAuthStatus from './components/TelegramAuthStatus';
+import { TelegramAuthProvider, useTelegramAuth } from './contexts/TelegramAuthContext';
 import { TONCONNECT_MANIFEST_URL } from './utils/constants';
 import { getUserProfile } from './services/api';
 
@@ -104,11 +108,21 @@ const DesktopMenu = () => {
 };
 
 function App() {
-     const screens = useBreakpoint();
+    const screens = useBreakpoint();
     const isMobile = !screens.lg;
     const [tonConnectUI, setOptions] = useTonConnectUI();
     const location = useLocation();
     const navigate = useNavigate();
+
+    // Telegram authentication
+    const { 
+        user: telegramUser, 
+        telegramUser: tgUser, 
+        isLoading: telegramLoading, 
+        isAuthenticated: telegramAuthenticated,
+        authenticate: telegramAuthenticate,
+        walletAddress: telegramWalletAddress
+    } = useTelegramAuth();
 
     // NEW: Central state for user data, as requested
     const [user, setUser] = useState(null);
@@ -141,42 +155,41 @@ function App() {
         if (refCode) {
             localStorage.setItem('OXYBLEReferralCode', refCode);
         }
-
-        if (window.Telegram && window.Telegram.WebApp) {
-            const tg = window.Telegram.WebApp;
-            tg.ready();
-            tg.expand();
-            tg.setHeaderColor('#111215');
-            tg.setBackgroundColor('#000000');
-        }
     }, [setOptions]);
 
-    // NEW: Effect to fetch user data when wallet connects
+    // Auto-authenticate when wallet connects
     useEffect(() => {
-        const onAuth = async () => {
-            if (wallet?.account?.address) {
-                setLoadingUser(true);
-                try {
-                    const urlParams = new URLSearchParams(window.location.search);
-                    const launchParams = {
-                        telegram_id: urlParams.get('telegram_id'),
-                        username: urlParams.get('username'),
-                        referrer: localStorage.getItem('OXYBLEReferralCode'),
-                    };
-                    const { data: profile } = await getUserProfile(wallet.account.address, launchParams);
-                    setUser(profile);
-                } catch (error) {
-                    console.error("Failed to fetch user profile:", error);
-                    setUser(null);
-                } finally {
-                    setLoadingUser(false);
-                }
-            } else {
-                setUser(null);
-            }
-        };
-        onAuth();
-    }, [wallet?.account?.address]);
+        if (wallet?.account?.address && telegramAuthenticated) {
+            telegramAuthenticate(wallet.account.address);
+        }
+    }, [wallet?.account?.address, telegramAuthenticated, telegramAuthenticate]);
+
+    // NEW: Effect to fetch user data when wallet connects
+    // useEffect(() => {
+    //     const onAuth = async () => {
+    //         if (wallet?.account?.address) {
+    //             setLoadingUser(true);
+    //             try {
+    //                 const urlParams = new URLSearchParams(window.location.search);
+    //                 const launchParams = {
+    //                     telegram_id: urlParams.get('telegram_id'),
+    //                     username: urlParams.get('username'),
+    //                     referrer: localStorage.getItem('OXYBLEReferralCode'),
+    //                 };
+    //                 const { data: profile } = await getUserProfile(wallet.account.address, launchParams);
+    //                 setUser(profile);
+    //             } catch (error) {
+    //                 console.error("Failed to fetch user profile:", error);
+    //                 setUser(null);
+    //             } finally {
+    //                 setLoadingUser(false);
+    //             }
+    //         } else {
+    //             setUser(null);
+    //         }
+    //     };
+    //     onAuth();
+    // }, [wallet?.account?.address]);
 
     // Theme configuration based on current theme
     const getThemeConfig = () => {
@@ -543,7 +556,13 @@ function App() {
         </div>
     );
 
-     const pageProps = { user, setUser, loadingUser };
+     const pageProps = { 
+        user: telegramUser || user, 
+        setUser, 
+        loadingUser: telegramLoading || loadingUser,
+        telegramUser: tgUser,
+        telegramAuthenticated
+    };
 
     return (
         <ConfigProvider theme={getThemeConfig()}>
@@ -554,6 +573,8 @@ function App() {
                         <Title level={isMobile ? 5 : 4} className="app-header-title">OXYBLE</Title>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                        <TelegramAuthStatus />
+                        <TelegramStarsBalance />
                         <Dropdown
                             menu={{ items: settingsItems }}
                             placement="bottomRight"
@@ -566,7 +587,7 @@ function App() {
                                 aria-label="Settings"
                             />
                         </Dropdown>
-                        <TonConnectButton className="ton-connect-button-custom" />
+                        <TelegramStars />
                     </div>
                 </Header>
                 <Layout className="app-main-layout-container">
@@ -602,7 +623,11 @@ function App() {
 // Your RootApp wrapper is preserved and correct
 const RootApp = () => (
     <Router>
-        <App />
+        <TelegramAuthProvider>
+            <TonConnectUIProvider manifestUrl={TONCONNECT_MANIFEST_URL}>
+                <App />
+            </TonConnectUIProvider>
+        </TelegramAuthProvider>
     </Router>
 );
 

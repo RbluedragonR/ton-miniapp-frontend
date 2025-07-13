@@ -209,22 +209,7 @@ h1, h2, h3, h4, h5, h6 {
     }
 }
 
-.ton-connect-button-custom .tc-button {
-    background-color: var(--app-button-primary-bg) !important;
-    color: var(--app-button-primary-text) !important;
-    border: none !important;
-    border-radius: 8px !important;
-    font-weight: 500 !important;
-    padding: 0 15px !important;
-    height: 36px !important;
-    font-size: 0.9rem !important;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2) !important;
-    transition: background-color 0.2s ease-in-out;
-}
 
-.ton-connect-button-custom .tc-button:hover {
-    background-color: var(--app-button-primary-hover-bg) !important;
-}
 
 .app-main-layout-container {
     display: flex;

@@ -1,0 +1,220 @@
+.telegram-stars-button {
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    height: 36px !important;
+    padding: 0 12px !important;
+    border-radius: 8px !important;
+    font-weight: 500 !important;
+    font-size: 0.9rem !important;
+    transition: all 0.2s ease-in-out !important;
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%) !important;
+    color: #000 !important;
+    border: none !important;
+    box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3) !important;
+}
+
+.telegram-stars-button:hover {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4) !important;
+    background: linear-gradient(135deg, #FFA500 0%, #FF8C00 100%) !important;
+}
+
+.telegram-stars-button:active {
+    transform: translateY(0) !important;
+    box-shadow: 0 2px 6px rgba(255, 215, 0, 0.3) !important;
+}
+
+.telegram-stars-button:focus {
+    outline: none !important;
+    box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.3), 0 2px 8px rgba(255, 215, 0, 0.3) !important;
+}
+
+.telegram-stars-button .anticon {
+    font-size: 16px !important;
+    color: inherit !important;
+}
+
+/* Modal styles */
+.telegram-stars-modal .ant-modal-content {
+    border-radius: 16px !important;
+    overflow: hidden !important;
+}
+
+.telegram-stars-modal .ant-modal-header {
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%) !important;
+    border-bottom: none !important;
+    padding: 20px 24px !important;
+}
+
+.telegram-stars-modal .ant-modal-title {
+    color: #000 !important;
+    font-weight: 600 !important;
+    font-size: 1.1rem !important;
+}
+
+.telegram-stars-modal .ant-modal-close {
+    color: #000 !important;
+    font-size: 18px !important;
+}
+
+.telegram-stars-modal .ant-modal-close:hover {
+    color: #333 !important;
+    background-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+.telegram-stars-modal .ant-modal-body {
+    padding: 24px !important;
+}
+
+.stars-modal-content {
+    text-align: center !important;
+}
+
+/* Star rating styles */
+.telegram-stars-modal .ant-rate {
+    color: #FFD700 !important;
+}
+
+.telegram-stars-modal .ant-rate-star {
+    margin-right: 8px !important;
+    transition: all 0.2s ease-in-out !important;
+}
+
+.telegram-stars-modal .ant-rate-star:hover {
+    transform: scale(1.1) !important;
+}
+
+.telegram-stars-modal .ant-rate-star.ant-rate-star-full .ant-rate-star-first,
+.telegram-stars-modal .ant-rate-star.ant-rate-star-full .ant-rate-star-second {
+    color: #FFD700 !important;
+}
+
+.telegram-stars-modal .ant-rate-star.ant-rate-star-half .ant-rate-star-first {
+    color: #FFD700 !important;
+}
+
+.telegram-stars-modal .ant-rate-star.ant-rate-star-half .ant-rate-star-second {
+    color: rgba(255, 215, 0, 0.3) !important;
+}
+
+.telegram-stars-modal .ant-rate-star.ant-rate-star-zero .ant-rate-star-first,
+.telegram-stars-modal .ant-rate-star.ant-rate-star-zero .ant-rate-star-second {
+    color: rgba(255, 215, 0, 0.3) !important;
+}
+
+/* Alert styles */
+.telegram-stars-modal .ant-alert {
+    border-radius: 12px !important;
+    border: 2px solid #52c41a !important;
+    background: linear-gradient(135deg, rgba(82, 196, 26, 0.1) 0%, rgba(82, 196, 26, 0.05) 100%) !important;
+}
+
+.telegram-stars-modal .ant-alert-message {
+    color: #52c41a !important;
+    font-weight: 600 !important;
+}
+
+.telegram-stars-modal .ant-alert-description {
+    color: #52c41a !important;
+    font-weight: 500 !important;
+}
+
+/* Button styles */
+.telegram-stars-modal .ant-btn-primary {
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%) !important;
+    border: none !important;
+    color: #000 !important;
+    font-weight: 600 !important;
+    height: 44px !important;
+    padding: 0 24px !important;
+    border-radius: 8px !important;
+    transition: all 0.2s ease-in-out !important;
+}
+
+.telegram-stars-modal .ant-btn-primary:hover {
+    background: linear-gradient(135deg, #FFA500 0%, #FF8C00 100%) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4) !important;
+}
+
+.telegram-stars-modal .ant-btn-primary:active {
+    transform: translateY(0) !important;
+}
+
+.telegram-stars-modal .ant-btn-primary:disabled {
+    background: #d9d9d9 !important;
+    color: #999 !important;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+.telegram-stars-modal .ant-btn-default {
+    height: 44px !important;
+    padding: 0 24px !important;
+    border-radius: 8px !important;
+    font-weight: 500 !important;
+    transition: all 0.2s ease-in-out !important;
+}
+
+.telegram-stars-modal .ant-btn-default:hover {
+    transform: translateY(-1px) !important;
+}
+
+.telegram-stars-modal .ant-btn-default:active {
+    transform: translateY(0) !important;
+}
+
+/* Light theme overrides */
+.theme-light .telegram-stars-button {
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%) !important;
+    color: #000 !important;
+    box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3) !important;
+}
+
+.theme-light .telegram-stars-button:hover {
+    background: linear-gradient(135deg, #FFA500 0%, #FF8C00 100%) !important;
+    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4) !important;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 480px) {
+    .telegram-stars-button {
+        height: 32px !important;
+        padding: 0 10px !important;
+        font-size: 0.8rem !important;
+    }
+    
+    .telegram-stars-button .anticon {
+        font-size: 14px !important;
+    }
+    
+    .telegram-stars-modal {
+        width: 90% !important;
+        max-width: 350px !important;
+    }
+    
+    .telegram-stars-modal .ant-modal-body {
+        padding: 20px !important;
+    }
+    
+    .telegram-stars-modal .ant-rate {
+        font-size: 28px !important;
+    }
+    
+    .telegram-stars-modal .ant-btn {
+        height: 40px !important;
+        padding: 0 20px !important;
+    }
+}
+
+/* Animation for reward display */
+@keyframes rewardPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.telegram-stars-button:has(.anticon-trophy) {
+    animation: rewardPulse 2s ease-in-out infinite;
+} 
